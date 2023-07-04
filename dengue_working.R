@@ -3,28 +3,28 @@
 # we first create the four probabilities of infection 
 getwd()
 library(tidyverse)
-library(ggplot2)
 
-#============ infection P
+# Set parameters ----------------------------------------------------------
 
 max_age <- 100
-
-N0 <- 100 
-
+N0 <- 100 # population size
 no_infection <- N0
+
+
+# Initialise dataframe ----------------------------------------------------
 
 col_length <- rep(0, max_age+1)
 
 col_names <- list("age",
-               "no_infected",
-               "first_inf",
-               "sec_inf",
-               "third_inf",
-               "fourth_inf",
-               "new_first",
-               "new_second",
-               "new_third",
-               "new_fourth",
+               "S4",
+               "S3",
+               "S2",
+               "S1",
+               "S0",
+               "I1",
+               "I2",
+               "I3",
+               "I4",
                "total")
 
 dengue <- array(data = 0,
@@ -32,6 +32,9 @@ dengue <- array(data = 0,
 colnames(dengue) <- col_names
 dengue[,"age"] <- seq( 0, max_age, by = 1)
 dengue[1,"no_infected"] <- 100
+
+
+# Populate dataframe ------------------------------------------------------
 
 infection_probs <- function( lambda, max_age, df, verbose=1 ){
   if(verbose==1){browser()}
@@ -44,41 +47,47 @@ infection_probs <- function( lambda, max_age, df, verbose=1 ){
   infect5_4 <- 0L
   
 
-  # first column(Number of people who are susceptible)
   for(age in seq_len(max_age)) {
     # S4
-    df[y+1, age + 1 , 2] <- df[y, age, 2] * (1-infect1_0) # probability of individual staying susceptible
+    df[y+1, age + 1 , "S4"] <- df[y, age, "S4"] * (1-infect1_0) # probability of individual staying susceptible
     
     # S3
     df[y+1, age + 1, "S3"] <- df[y, age, "S4"] * (infect1_0) + # prob of people with first infection 
       (df[y, age, "S3"] * (1-infect2_1) ) # probability of not getting a second infection
-    
-    #df[age-1,7]
-    # infections occur during this age and year
+
+    # I1 (reminder: infections occur during this age and year)
     df[y, age, "I1"] <- df[y,age, "S4"] * (infect1_0)  # Number of new first infections
     
-    df[age, 4] <- df[age -1, 3] * (infect2_1) + # prob of people with second infection 
-      (df[age-1, 4] * (1-infect3_2) ) # probability of not getting a third infection
+    # S2
+    df[age, "S2"] <- df[age -1, "S3"] * (infect2_1) + # prob of people with second infection 
+      (df[age-1, "S2"] * (1-infect3_2) ) # probability of not getting a third infection
     
-    df[age, 8] <- df[age -1, 3] * (infect2_1)   # Number of new second infections
+    # I2
+    df[age, "I2"] <- df[age -1, "S3"] * (infect2_1)   # Number of new second infections
     
-    df[age, 5] <- df[age -1, 4] * (infect3_2) + # prob of people with third infection 
-      (df[age-1, 5] * (1-infect4_3) ) # probability of not getting a fourth infection
+    # S1
+    df[age, "S1"] <- df[age -1, "S2"] * (infect3_2) + # prob of people with third infection 
+      (df[age-1, "S1"] * (1-infect4_3) ) # probability of not getting a fourth infection
     
-    df[age, 9] <- df[age -1, 4] * (infect3_2) # number of new third infections
+    #I3
+    df[age, "I3"] <- df[age -1, "S2"] * (infect3_2) # number of new third infections
     
-    df[age, 6] <- df[age -1, 5] * (infect4_3) + # prob of people with fourth infection 
-      (df[age-1, 6] * (1-infect5_4) ) # probability of not getting a fifth infection
+    # S0
+    df[age, "S0"] <- df[age -1, "S1"] * (infect4_3) + # prob of people with fourth infection 
+      (df[age-1, "S0"] * (1-infect5_4) ) # probability of not getting a fifth infection
     
-    df[age, 10] <- df[age -1, 5] * (infect4_3) # number of new fourth infections
+    # I4
+    df[age, "I4"] <- df[age -1, "S1"] * (infect4_3) # number of new fourth infections
     
   }
   
-  df[,"total"] <- rowSums(df[, 2:6])
+  df[,"total"] <- rowSums(df[, "S4":"S0"])
   
   return(df)
 }
 
+
+# Plotting ----------------------------------------------------------------
 
 dengue_lambda_Lo <- infection_probs( lambda = 0.01, max_age = max_age, df = dengue, verbose = 0 )
 
