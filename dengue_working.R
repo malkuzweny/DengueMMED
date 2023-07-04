@@ -48,49 +48,28 @@ infection_probs <- function( lambda, max_age, df, verbose=1 ){
   # first column(Number of people who are susceptible)
   for( ii in 2:(max_age+1)) {
     
-    df[ii, 2] <- df[ii -1, 2] * (1-infect1_0) # probability 
-    
-  }
-  
-  # second column 
-  for( ii in 2:(max_age+1)) {
+    df[ii, 2] <- df[ii -1, 2] * (1-infect1_0) # probability of individual staying susceptible
     
     df[ii, 3] <- df[ii -1, 2] * (infect1_0) + # prob of people with first infection 
       (df[ii-1, 3] * (1-infect2_1) ) # probability of not getting a second infection
     
-    
-    df[ii, 7] <- df[ii -1, 2] * (infect1_0)  # Number of new cases
-
-    
-  }
-  
-  # third column 
-  for( ii in 2:(max_age+1)) {
+    df[ii, 7] <- df[ii -1, 2] * (infect1_0)  # Number of new first infections
     
     df[ii, 4] <- df[ii -1, 3] * (infect2_1) + # prob of people with second infection 
       (df[ii-1, 4] * (1-infect3_2) ) # probability of not getting a third infection
     
-    df[ii, 8] <- df[ii -1, 3] * (infect2_1)   # Number of new cases
-  }
-  
-  
-  # fourth column 
-  for( ii in 2:(max_age+1)) {
+    df[ii, 8] <- df[ii -1, 3] * (infect2_1)   # Number of new second infections
     
     df[ii, 5] <- df[ii -1, 4] * (infect3_2) + # prob of people with third infection 
       (df[ii-1, 5] * (1-infect4_3) ) # probability of not getting a fourth infection
     
-    df[ii, 9] <- df[ii -1, 4] * (infect3_2) # number of new cases 
-  }
-  
-  
-  # fifth column 
-  for( ii in 2:(max_age+1)) {
+    df[ii, 9] <- df[ii -1, 4] * (infect3_2) # number of new third infections
     
-    df[ii, 6] <- df[ii -1, 5] * (infect4_3) + # prob of people with third infection 
-      (df[ii-1, 6] * (1-infect5_4) ) # probability of not getting a fourth infection
+    df[ii, 6] <- df[ii -1, 5] * (infect4_3) + # prob of people with fourth infection 
+      (df[ii-1, 6] * (1-infect5_4) ) # probability of not getting a fifth infection
     
-    df[ii, 10] <- df[ii -1, 5] * (infect4_3) # number of new cases 
+    df[ii, 10] <- df[ii -1, 5] * (infect4_3) # number of new fourth infections
+    
   }
   
   df[,"total"] <- rowSums(df[, 2:6])
