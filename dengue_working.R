@@ -8,16 +8,26 @@ library(data.table)
 
 # Set parameters ----------------------------------------------------------
 
+# Calculate lambda in Colombo
+
+# probability first infection = 14.1%
+# 0.141 <- 1-(1 - lambda)^4
+# lambda = 0.037
+
+
 #will remove last age
 max_age <- 100
 #will remove last year
-years <- 2010:2030
+years <- 2010:2110
 N0 <- 100 # population size
 no_infection <- N0
-lambda <- rep(0.01, length=length(years))
+lambda <- rep(0.037, length=length(years))
 P_D <- c(0.005, 0.05, 0.00001, 0.00001)
 
 P_D_mat <- t(replicate(max_age,P_D))
+
+
+
 
 # Initialise dataframe ----------------------------------------------------
 
@@ -46,7 +56,6 @@ array_names[[3]] <- col_names
 dengue <- array(data = 0,
                 dim = c(length(years), max_age+1,length(col_names)),
                 dimnames=array_names)
-
 
 
 dengue[1,,"S4"] <- N0 # add 100 to S4 to each age group in first year
@@ -123,12 +132,13 @@ dengue_lambda_Lo <- infection_probs( lambda = lambda, max_age = max_age, P_D_mat
 
 dengue_lambda_Lo[, , "total"]
 
-dengue_lambda_Hi <- infection_probs( lambda = 0.05, max_age = max_age, df = dengue, verbose = 0 )
+# dengue_lambda_Hi <- infection_probs( lambda = 0.05, max_age = max_age, df = dengue, verbose = 0 )
 
 dengue_lambda_Lo["2010",,"I2"]
 
-plot( x=1:(length(years)-1), y = dengue_lambda_Lo[,3,"D2" ], type = "b", 
-      ylim = c(0, 0.02), xlab="Years", ylab="Number of new clinical secondary infections")
+# years on x
+plot( x=1:(length(years)-1), y = dengue_lambda_Lo[,3,"I2" ], type = "b", 
+      ylim = c(0, 5), xlab="Years", ylab="Number of new clinical secondary infections")
 
 for(i in 2:(length(years)-1)){
   lines( x = (1:(max_age) -1), y = dengue_lambda_Lo[i,,"I1" ])
@@ -136,3 +146,11 @@ for(i in 2:(length(years)-1)){
 }
 
 
+# age on x
+plot( x=1:(max_age)-1, y = dengue_lambda_Lo[100, ,"I2" ], type = "b", 
+      ylim = c(0, 5), xlab="Age", ylab="Number of new clinical secondary infections")
+
+for(i in 2:(length(years)-1)){
+  lines( x = (1:(max_age) -1), y = dengue_lambda_Lo[i,,"I1" ])
+  
+}
