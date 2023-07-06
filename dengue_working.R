@@ -131,8 +131,9 @@ AgeDist <- c(0.01518000, 0.01518000, 0.01518000, 0.01518000, 0.01518000, 0.01560
              0.01506456, 0.01506456, 0.01506456, 0.01506456, 0.01506456, 0.01525617, 0.01525617, 0.01525617, 0.01525617, 0.01525617,
              0.01610475, 0.01610475, 0.01610475, 0.01610475, 0.01610475, 0.01383275, 0.01383275, 0.01383275, 0.01383275, 0.01383275)
 
-AgeDist <- c(AgeDist, rep(AgeDist[length(AgeDist)],20))
+AgeDist <- c(AgeDist, rep(AgeDist[length(AgeDist)],20)) # fill age vector to age 60
 
+# obtain prop of people with second infection in a year at equilibrium
 for(i in 1:length(lambda_vals)){
   
   dengue_df <- infection_probs(lambda = rep(lambda_vals[i], length(years)), 
@@ -147,9 +148,9 @@ for(i in 1:length(lambda_vals)){
 }
 
 
-#set 1 for each age group (not 100)
-#multiply I2 by the number of children in each age group
-#max age is 60
+# plot proportion of people with second infection at equilibrium relative to prop of people
+# with second infection in Colombo for a range of FOIs. this is used to find out the FOI
+# in the region where prop of people with second infection is 77% of that in Colombo
 
 plot(x = I2_vec/I2_vec[38], y = lambda_vals, type = "l")
 abline(v = 1.0)
