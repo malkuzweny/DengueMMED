@@ -1,30 +1,33 @@
 ---
-title: "dengue_study_design"
+title: "Modelling Dengue Fever in Sri-Lanka to inform Study Design"
+author: Brian
+
 format: html
 editor: visual
 filters:
   - authors-block/authors-block.lua
-  
+bibliography: dengue_study_design.bib
+
+csl: Extras/clinical-mass-spectrometry.csl
+
 toc: true
 ---
 
+## Introduction
+
+Dengue Fever is bits and bob. Its incidence is x. We use a catalytic modelling to inform study design.
+
 ## Objectives
 
-1.  Know S4 in Colombo for age ranges
-
-    1.  Derive Lamda in Colombo.
+1.  Know S4 in Colombo for age ranges (find the Lambda in Colombo)
 
 2.  Get disease data for Colombo and Gampaha
 
-3.  Link lambda with disease in Colombo
+3.  Link lambda with disease in Colombo (find Rho)
 
-    1.  Get ht Rho which = P(I2 become case)
-
-4.  Find Lambda with disease in Gmapaha with the Rho of Colombo
+4.  Using the Rho from Colombo, find the number of, passive surveillance cases, acive surveillance cases and Infections (through seroprevalence. Find Lambda with disease in Gampaha with the Rho of Colombo
 
 5.  Power Calculations
-
-FOI = 14. 1
 
 ## Methods
 
@@ -57,43 +60,79 @@ We estimated the relationship between force of infection and reported cases in C
 
 3 outcomes to keep track of, passive surveilance, acitve surveillance (paper on probability of infection for different numbers) and then looking at the infections (I2 category instead of the D2) category.
 
+## Find number of cases in Gampaha
+
+### Case definitions
+
+We assume 100% Sensitivity and specificity in all diagnostics.
+
+**Passive surveillance case** - Symptomatic infections that presents to a health facility in Gampaha in year x.
+
+$$
+PassiveCase  = I2*P(case|I2)
+$$
+
+**Active Surveillance** - Symptomatic infections identified by active surveillance in Gampaha in year x.
+
+$$
+ActiveCase = I2 * P(D2|I2)
+$$
+
+**Infection Surveillance** - Any positive identified by Dengue IgG or IgM in Gampaha in year x.
+
+$$
+InfectionCase = I2
+$$
+
+## Assumptions
+
+We asume age distribution in Gampaha and Colombo are the same.
+
 ## Power Calcs
 
-Getting the weighted average of how many infection i expect to detect in the age group of interest.
+$$
+n= (Z_\frac{\alpha}{2} \quad + \quad Z_\beta) ^2 \frac{\pi_0(1-\pi_0) + \pi_A(1-\pi_A)}{(\pi_0 - \pi_A)^2 }
+$$
 
-so you need:
+$$
+\text{assuming} ; n ; \text{individuals per cluster, the necessary number of clusters is calculated:} 
+$$
+
+$$
+c = 1 + (Z_\frac{\alpha}{2} \quad + \quad Z_\beta) ^2 \frac{\frac{\pi_0(1-\pi_0)}{n}+ \frac{ \pi_A(1-\pi_A)}{n} + k^2 (\pi_0^2 + \pi_A^2) }{(\pi_0 - \pi_A)^2 }
+$$
 
 
-    detected \<- rowSums(New\[,1:maxinfec\]
-    P_1_year <- sum((detected* age disti)[Agestart-ageend]) # this is the probability of a first or second infection per year.  
+## Results
 
-have a detected proporiton and a P_1\_year \<- 0.052814
+### Seroprevalence
 
-"In on eyear, 4-16 years old, i expect 5.28% of them to experience either the first or second infection in one year."
+### Model output
 
-What is the proportion that they present to a clinic (77 per 10 000 - which is lower than 5 %)
-
-Then our question becomes, what if i was enrollign for 2 years, what if we were using diff age groups etc.
-
-## power calcs again
-
-x \~ N (100, 15/sqrt(N) 100+1.96
-
-Probability of an event is 10 percent (over 2 years) ...and we want to reduce it by x so its p0 (10 percent) - the P1 (which is the effect size)
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+# All I last year, per age.
 
 ```{r}
-1 + 1
+#| label: fig-sampsi
+#| fig-cap: "Sample "
+source("samplesizeCalc.R")
 ```
+We present the samples size on the x axis and clusters on the y axis for varying effect size $\pi_{diff}$ and inter-cluster coefficient $k$. 
 
-You can add options to executable code like this
+### Passive surveillance
+
+#### Varying effect size
+
+### Infection Surveilance
+
+#### Varying effect size
+
+```{r, setup}
+source("dengue_working.R")
+
+```
 
 ```{r}
-#| echo: false
-2 * 2
-```
+#| label: fig-samplesize 
+#| #| fig-cap: "The Sample sizes needed to show \_pi sample size for k clusters and n participants."
 
-The `echo: false` option disables the printing of code (only output is displayed).
+```
