@@ -165,6 +165,9 @@ dengue[,1,"total"] <- dengue[,1,"S4"] # add total to first age
 
 #-------------------------
 
+plot( x=1:(length(years)-1), y = dengue[1,3,"I2"], type = "b", 
+      ylim = c(0, 5), xlab="Years", ylab="Number of new clinical secondary infections")
+
 lambda_vals <- seq(0, 0.1, by=0.001)
 I2_vec <- numeric(length(lambda_vals))
 
@@ -172,8 +175,10 @@ AgeDist <- c(0.01518000, 0.01518000, 0.01518000, 0.01518000, 0.01518000, 0.01560
              0.01478000, 0.01478000, 0.01478000, 0.01478000, 0.01478000, 0.01617775, 0.01617775, 0.01617775, 0.01617775, 0.01617775,
              0.01506456, 0.01506456, 0.01506456, 0.01506456, 0.01506456, 0.01525617, 0.01525617, 0.01525617, 0.01525617, 0.01525617,
              0.01610475, 0.01610475, 0.01610475, 0.01610475, 0.01610475, 0.01383275, 0.01383275, 0.01383275, 0.01383275, 0.01383275)
+popSize <- 600000
 
 AgeDist <- c(AgeDist, rep(AgeDist[length(AgeDist)],20))
+AgeDist_num <- AgeDist*popSize
 
 for(i in 1:length(lambda_vals)){
   dengue_df <- infection_probs( lambda = rep(lambda_vals[i], length(years)), 
@@ -182,9 +187,11 @@ for(i in 1:length(lambda_vals)){
                                 df = dengue, 
                                 verbose = 0 )
   
-  I2_vec[i] <- sum(AgeDist[1:30]*dengue_df[length(years)-1,1:30,"I2"])
+  I2_vec[i] <- sum(AgeDist_num[1:60]*dengue_df[length(years)-1,1:60,"I2"])
   
 }
+
+(100/10000)/(I2_vec[38]/10000)
 
 #set 1 for each age group (not 100)
 #multiply I2 by the number of children in each age group
@@ -196,7 +203,15 @@ abline(h = lambda_vals[38])
 abline(v = 0.77)
 abline(h = lambda_vals[24])
 
+sum(AgeDist[1:60]*dengue_df[length(years)-1,1:60,"D2"])*10000
 
+dengue_c_df <- infection_probs( lambda = rep(0.023, length(years)), 
+                                max_age = max_age, 
+                                P_D_mat = P_D_mat, 
+                                df = dengue, 
+                                verbose = 0 )
+
+sum(AgeDist[1:60]*dengue_c_df[length(years)-1,1:60,"I2"])
 
 #divide I2_vec by the I2_vec val when lambda = 0.037
 
