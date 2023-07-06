@@ -1,0 +1,98 @@
+---
+title: "dengue_study_design"
+format: html
+editor: visual
+filters:
+  - authors-block/authors-block.lua
+  
+toc: true
+---
+
+## Objectives
+
+1.  Know S4 in Colombo for age ranges
+
+    1.  Derive Lamda in Colombo.
+
+2.  Get population data for Colombo and Gampaha
+
+3.  Link lambda with disease in Colombo
+
+    1.  Get ht Rho which = P(I2 become case)
+
+4.  Find Lambda with disease in Gmapaha with the Rho of Colombo
+
+5.  Power Calculations
+
+FOI = 14. 1
+
+## Assumptions/Parameters
+
+### Getting lambda:
+
+We take the probability of first infection of \~ 14.1%. (CI x : y ) [@tam2013EstimatesDengueForce],
+
+$$
+\[
+P(firstInfection|Noinfection) = 1 - (1 - \lambda)^{\e(4)}
+\]
+$$
+
+Therefore lambda = 0.037.
+
+## S4 
+
+We ran the code for 100 years as the burn in and then sum the S4 group across all ages for the last year which is n = 714.
+
+## pop data for Colombo and Gampaha
+
+Population data is derived from all you need to do is multiple population estimates by the proportion of the groups instead of needing to figure out how you start the popuatlion at a certain size etc.
+
+3 outcomes to keep track of, passive surveilance, acitve surveillance (paper on probability of infection for different numbers) and then looking at the infections (I2 category instead of the D2) category.
+
+## Power Calcs
+
+Getting the weighted average of how many infection i expect to detect in the age group of interest.
+
+so you need:
+
+```
+
+detected \<- rowSums(New\[,1:maxinfec\]
+P_1_year <- sum((detected* age disti)[Agestart-ageend]) # this is the probability of a first or second infection per year.  
+
+```
+
+have a detected proporiton and a P_1_year \<- 0.052814
+
+"In on eyear, 4-16 years old, i expect 5.28% of them to experience either the first or second infection in one year."
+
+What is the proportion that they present to a clinic (77 per 10 000 - which is lower than 5 %)
+
+Then our question becomes, what if i was enrollign for 2 years, what if we were using diff age groups etc.
+
+
+## power calcs again
+
+x ~ N (100, 15/sqrt(N)
+100+1.96
+
+Probability of an event is 10 percent (over 2 years) ...and we want to reduce it by x so its p0 (10 percent) - the P1 (which is the effect size) 
+
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
