@@ -113,8 +113,21 @@ $$
 
 ```{r}
 #| label: fig-sampsi
-#| fig-cap: "Sample "
+#| fig-cap: "Sample size calculation for cases"
+#| echo: false
+
 source("samplesizeCalc.R")
+
+plot<- plot_sample_cases()
+plot
+```
+```{r}
+#| label: fig-sampsiinfection
+#| fig-cap: "Sample size calculation for infection"
+
+
+plot_sample_infections()
+
 ```
 We present the samples size on the x axis and clusters on the y axis for varying effect size $\pi_{diff}$ and inter-cluster coefficient $k$. 
 
