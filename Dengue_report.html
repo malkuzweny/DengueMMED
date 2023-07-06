@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.340">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Brian">
+
+<title>Modelling Dengue Fever in Sri-Lanka to inform Study Design</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="Dengue_report_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Dengue_report_files/libs/quarto-html/quarto.js"></script>
+<script src="Dengue_report_files/libs/quarto-html/popper.min.js"></script>
+<script src="Dengue_report_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Dengue_report_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Dengue_report_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Dengue_report_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Dengue_report_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Dengue_report_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Dengue_report_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#objectives" id="toc-objectives" class="nav-link" data-scroll-target="#objectives">Objectives</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
+  <ul class="collapse">
+  <li><a href="#deriving-lambda-and-initial-conditions-for-colombo" id="toc-deriving-lambda-and-initial-conditions-for-colombo" class="nav-link" data-scroll-target="#deriving-lambda-and-initial-conditions-for-colombo">Deriving lambda and initial conditions for Colombo</a></li>
+  </ul></li>
+  <li><a href="#obtaining-disease-data-for-colombo-and-gampaha" id="toc-obtaining-disease-data-for-colombo-and-gampaha" class="nav-link" data-scroll-target="#obtaining-disease-data-for-colombo-and-gampaha">Obtaining disease data for Colombo and Gampaha</a></li>
+  <li><a href="#calculate-rho" id="toc-calculate-rho" class="nav-link" data-scroll-target="#calculate-rho">Calculate Rho</a></li>
+  <li><a href="#determine-lambda-in-gampaha" id="toc-determine-lambda-in-gampaha" class="nav-link" data-scroll-target="#determine-lambda-in-gampaha">Determine Lambda in Gampaha</a></li>
+  <li><a href="#find-number-of-cases-in-gampaha" id="toc-find-number-of-cases-in-gampaha" class="nav-link" data-scroll-target="#find-number-of-cases-in-gampaha">Find number of cases in Gampaha</a>
+  <ul class="collapse">
+  <li><a href="#case-definitions" id="toc-case-definitions" class="nav-link" data-scroll-target="#case-definitions">Case definitions</a></li>
+  </ul></li>
+  <li><a href="#assumptions" id="toc-assumptions" class="nav-link" data-scroll-target="#assumptions">Assumptions</a></li>
+  <li><a href="#power-calcs" id="toc-power-calcs" class="nav-link" data-scroll-target="#power-calcs">Power Calcs</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a>
+  <ul class="collapse">
+  <li><a href="#seroprevalence" id="toc-seroprevalence" class="nav-link" data-scroll-target="#seroprevalence">Seroprevalence</a></li>
+  <li><a href="#model-output" id="toc-model-output" class="nav-link" data-scroll-target="#model-output">Model output</a></li>
+  </ul></li>
+  <li><a href="#all-i-last-year-per-age." id="toc-all-i-last-year-per-age." class="nav-link" data-scroll-target="#all-i-last-year-per-age.">All I last year, per age.</a>
+  <ul class="collapse">
+  <li><a href="#passive-surveillance" id="toc-passive-surveillance" class="nav-link" data-scroll-target="#passive-surveillance">Passive surveillance</a></li>
+  <li><a href="#infection-surveilance" id="toc-infection-surveilance" class="nav-link" data-scroll-target="#infection-surveilance">Infection Surveilance</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Modelling Dengue Fever in Sri-Lanka to inform Study Design</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Brian </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Dengue Fever is bits and bob. Its incidence is x. We use a catalytic modelling to inform study design.</p>
+</section>
+<section id="objectives" class="level2">
+<h2 class="anchored" data-anchor-id="objectives">Objectives</h2>
+<ol type="1">
+<li><p>Know S4 in Colombo for age ranges (find the Lambda in Colombo)</p></li>
+<li><p>Get disease data for Colombo and Gampaha</p></li>
+<li><p>Link lambda with disease in Colombo (find Rho)</p></li>
+<li><p>Using the Rho from Colombo, find the number of, passive surveillance cases, acive surveillance cases and Infections (through seroprevalence. Find Lambda with disease in Gampaha with the Rho of Colombo</p></li>
+<li><p>Power Calculations</p></li>
+</ol>
+</section>
+<section id="methods" class="level2">
+<h2 class="anchored" data-anchor-id="methods">Methods</h2>
+<section id="deriving-lambda-and-initial-conditions-for-colombo" class="level3">
+<h3 class="anchored" data-anchor-id="deriving-lambda-and-initial-conditions-for-colombo">Deriving lambda and initial conditions for Colombo</h3>
+<p>We take the probability of first infection of ~ 14.1%. (CI x : y ) <span class="citation" data-cites="tam2013EstimatesDengueForce">[<a href="#ref-tam2013EstimatesDengueForce" role="doc-biblioref">1</a>]</span>,</p>
+<p><span class="math display">\[
+P(First\;Infection|No\;Infection) = 1 - (1 - \lambda)^{4}= 0.141\
+\\\
+\\
+therefore \; \lambda = 0.037
+\]</span></p>
+<p>We ran the simulation for 100 years, as the burn-in period. We determined the proportion of each susceptibility status per age.</p>
+</section>
+</section>
+<section id="obtaining-disease-data-for-colombo-and-gampaha" class="level2">
+<h2 class="anchored" data-anchor-id="obtaining-disease-data-for-colombo-and-gampaha">Obtaining disease data for Colombo and Gampaha</h2>
+<p>Annual reported cases averaged over 5 years per 10 000 population is 100/10 000 pop. in Colombo and 77/10 000 pop in Gampaha. (ref)</p>
+</section>
+<section id="calculate-rho" class="level2">
+<h2 class="anchored" data-anchor-id="calculate-rho">Calculate Rho</h2>
+<p><span class="math display">\[
+\rho = P(case|I2)  = case detection proportion/ I2
+\]</span></p>
+</section>
+<section id="determine-lambda-in-gampaha" class="level2">
+<h2 class="anchored" data-anchor-id="determine-lambda-in-gampaha">Determine Lambda in Gampaha</h2>
+<p>We estimated the relationship between force of infection and reported cases in Colombo, assuming all reported cases are due to secondary infections. We also assumed the force of infection to case relationship is the same in both areas.</p>
+<p>3 outcomes to keep track of, passive surveilance, acitve surveillance (paper on probability of infection for different numbers) and then looking at the infections (I2 category instead of the D2) category.</p>
+</section>
+<section id="find-number-of-cases-in-gampaha" class="level2">
+<h2 class="anchored" data-anchor-id="find-number-of-cases-in-gampaha">Find number of cases in Gampaha</h2>
+<section id="case-definitions" class="level3">
+<h3 class="anchored" data-anchor-id="case-definitions">Case definitions</h3>
+<p>We assume 100% Sensitivity and specificity in all diagnostics.</p>
+<p><strong>Passive surveillance case</strong> - Symptomatic infections that presents to a health facility in Gampaha in year x.</p>
+<p><span class="math display">\[
+PassiveCase  = I2*P(case|I2)
+\]</span></p>
+<p><strong>Active Surveillance</strong> - Symptomatic infections identified by active surveillance in Gampaha in year x.</p>
+<p><span class="math display">\[
+ActiveCase = I2 * P(D2|I2)
+\]</span></p>
+<p><strong>Infection Surveillance</strong> - Any positive identified by Dengue IgG or IgM in Gampaha in year x.</p>
+<p><span class="math display">\[
+InfectionCase = I2
+\]</span></p>
+</section>
+</section>
+<section id="assumptions" class="level2">
+<h2 class="anchored" data-anchor-id="assumptions">Assumptions</h2>
+<p>We asume age distribution in Gampaha and Colombo are the same.</p>
+</section>
+<section id="power-calcs" class="level2">
+<h2 class="anchored" data-anchor-id="power-calcs">Power Calcs</h2>
+<p><span class="math display">\[
+n= (Z_\frac{\alpha}{2} \quad + \quad Z_\beta) ^2 \frac{\pi_0(1-\pi_0) + \pi_A(1-\pi_A)}{(\pi_0 - \pi_A)^2 }
+\]</span></p>
+<p><span class="math display">\[
+\text{assuming} ; n ; \text{individuals per cluster, the necessary number of clusters is calculated:}
+\]</span></p>
+<p><span class="math display">\[
+c = 1 + (Z_\frac{\alpha}{2} \quad + \quad Z_\beta) ^2 \frac{\frac{\pi_0(1-\pi_0)}{n}+ \frac{ \pi_A(1-\pi_A)}{n} + k^2 (\pi_0^2 + \pi_A^2) }{(\pi_0 - \pi_A)^2 }
+\]</span></p>
+</section>
+<section id="results" class="level2">
+<h2 class="anchored" data-anchor-id="results">Results</h2>
+<section id="seroprevalence" class="level3">
+<h3 class="anchored" data-anchor-id="seroprevalence">Seroprevalence</h3>
+</section>
+<section id="model-output" class="level3">
+<h3 class="anchored" data-anchor-id="model-output">Model output</h3>
+</section>
+</section>
+<section id="all-i-last-year-per-age." class="level1">
+<h1>All I last year, per age.</h1>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>NULL</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-sampsi" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Dengue_report_files/figure-html/fig-sampsi-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;1: Sample size calculation for cases</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_sample_infections</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-sampsiinfection" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Dengue_report_files/figure-html/fig-sampsiinfection-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;2: Sample size calculation for infection</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>We present the samples size on the x axis and clusters on the y axis for varying effect size <span class="math inline">\(\pi_{diff}\)</span> and inter-cluster coefficient <span class="math inline">\(k\)</span>.</p>
+<section id="passive-surveillance" class="level3">
+<h3 class="anchored" data-anchor-id="passive-surveillance">Passive surveillance</h3>
+<section id="varying-effect-size" class="level4">
+<h4 class="anchored" data-anchor-id="varying-effect-size">Varying effect size</h4>
+</section>
+</section>
+<section id="infection-surveilance" class="level3">
+<h3 class="anchored" data-anchor-id="infection-surveilance">Infection Surveilance</h3>
+<section id="varying-effect-size-1" class="level4">
+<h4 class="anchored" data-anchor-id="varying-effect-size-1">Varying effect size</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"dengue_working.R"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Dengue_report_files/figure-html/setup-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+
+</section>
+</section>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body" role="list">
+<div id="ref-tam2013EstimatesDengueForce" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[1] </div><div class="csl-right-inline">C.C. Tam, H. Tissera, A.M. de Silva, A.D. De Silva, H.S. Margolis, A. Amarasinge, Estimates of <span>Dengue Force</span> of <span>Infection</span> in <span>Children</span> in <span>Colombo</span>, <span>Sri Lanka</span>, PLoS Negl Trop Dis. 7 (2013) e2259. https://doi.org/<a href="https://doi.org/10.1371/journal.pntd.0002259">10.1371/journal.pntd.0002259</a>.</div>
+</div>
+</div></section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

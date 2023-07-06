@@ -1,9 +1,7 @@
 rm(list=ls())
 # we want to recreate the dengue model
 
-# we first create the four probabilities of infection 
-getwd()
-library(tidyverse)
+# we first create the four probabilities of infection
 library(data.table)
 
 # Set parameters ----------------------------------------------------------
@@ -121,75 +119,33 @@ infection_probs <- function( lambda, max_age, P_D_mat, df, verbose=1 ){
   return(df)
 }
 
-###set baseline
-dengue_baseline <- infection_probs( lambda = lambda, max_age = max_age, P_D_mat = P_D_mat, df = dengue, verbose = 0 )
 
-col_names <- list(
-  "S4",
-  "S3",
-  "S2",
-  "S1",
-  "S0",
-  "I1",
-  "I2",
-  "I3",
-  "I4",
-  "D1",
-  "D2",
-  "D3",
-  "D4",
-  "total")
-
-array_names <- vector("list", 3)
-array_names[[1]] <- paste("year", years, sep="_")
-array_names[[2]] <- paste("age", (1:(max_age+1) -1), sep="_")
-array_names[[3]] <- col_names
-
-# dims are year - age - outcomes
-dengue <- array(data = 0,
-                dim = c(length(years), max_age+1,length(col_names)),
-                dimnames=array_names)
-
-dengue[1,1:max_age,"S4"] <- dengue_baseline[100,,"S4"] # add equilibrium susc to S4 to each age group in first year
-dengue[1,1:max_age,"S3"] <- dengue_baseline[100,,"S3"] # add equilibrium susc to S3 to each age group in first year
-dengue[1,1:max_age,"S2"] <- dengue_baseline[100,,"S2"] # add equilibrium susc to S2 to each age group in first year
-dengue[1,1:max_age,"S1"] <- dengue_baseline[100,,"S1"] # add equilibrium susc to S1 to each age group in first year
-dengue[1,1:max_age,"S0"] <- dengue_baseline[100,,"S0"] # add equilibrium susc to S0 to each age group in first year
-
-dengue[,1,"S4"] <- N0 # add 100 to S4 of 0 age group in all years (births)
-
-dengue[1,,"total"] <- dengue[1,,"S4"] + dengue[1,,"S3"] +
-  dengue[1,,"S2"] + dengue[1,,"S1"] + 
-  dengue[1,,"S0"] # add total to first year
-dengue[,1,"total"] <- dengue[,1,"S4"] # add total to first age
-
-#-------------------------
-
-plot( x=1:(length(years)-1), y = dengue[1,3,"I2"], type = "b", 
-      ylim = c(0, 5), xlab="Years", ylab="Number of new clinical secondary infections")
+# I2 vs. lambda plot ------------------------------------------------------
 
 lambda_vals <- seq(0, 0.1, by=0.001)
 I2_vec <- numeric(length(lambda_vals))
+I1_vec <- numeric(length(lambda_vals))
 
 AgeDist <- c(0.01518000, 0.01518000, 0.01518000, 0.01518000, 0.01518000, 0.01560000, 0.01560000, 0.01560000, 0.01560000, 0.01560000,
              0.01478000, 0.01478000, 0.01478000, 0.01478000, 0.01478000, 0.01617775, 0.01617775, 0.01617775, 0.01617775, 0.01617775,
              0.01506456, 0.01506456, 0.01506456, 0.01506456, 0.01506456, 0.01525617, 0.01525617, 0.01525617, 0.01525617, 0.01525617,
              0.01610475, 0.01610475, 0.01610475, 0.01610475, 0.01610475, 0.01383275, 0.01383275, 0.01383275, 0.01383275, 0.01383275)
-popSize <- 600000
 
 AgeDist <- c(AgeDist, rep(AgeDist[length(AgeDist)],20))
-AgeDist_num <- AgeDist*popSize
 
 for(i in 1:length(lambda_vals)){
-  dengue_df <- infection_probs( lambda = rep(lambda_vals[i], length(years)), 
-                                max_age = max_age, 
-                                P_D_mat = P_D_mat, 
-                                df = dengue, 
-                                verbose = 0 )
   
-  I2_vec[i] <- sum(AgeDist_num[1:60]*dengue_df[length(years)-1,1:60,"I2"])
+  dengue_df <- infection_probs(lambda = rep(lambda_vals[i], length(years)), 
+                               max_age = max_age, 
+                               P_D_mat = P_D_mat, 
+                               df = dengue,
+                               verbose = 0)
+  
+  I2_vec[i] <- sum(AgeDist[1:60]*dengue_df[length(years)-1,1:60,"I2"])/sum(AgeDist[1:60])
+  I1_vec[i] <- sum(AgeDist[1:60]*dengue_df[length(years)-1,1:60,"I1"])/sum(AgeDist[1:60])
   
 }
+
 
 #set 1 for each age group (not 100)
 #multiply I2 by the number of children in each age group
@@ -199,56 +155,30 @@ plot(x = I2_vec/I2_vec[38], y = lambda_vals, type = "l")
 abline(v = 1.0)
 abline(h = lambda_vals[38])
 abline(v = 0.77)
-abline(h = lambda_vals[24])
-
-rho <- (100/10000)/(I2_vec[38]/10000)
-
-dengue_df <- infection_probs(lambda = rep(lambda_vals[i], length(years)), 
-                             max_age = max_age, 
-                             P_D_mat = P_D_mat, 
-                             df = dengue, 
-                             verbose = 0)
-
-#divide I2_vec by the I2_vec val when lambda = 0.037
-
-lambda_vals[38]
-
-#passive surveillance (cases = I2*rho, solve for rho) -- entire pop
-#we know lambda --> I2 --> find rho to go to cases (known)
-#active surveillance (D1 + D2 + D3 + D4) -- entire pop
-#tracking infections (I1 + I2, pick age range and number of years)
-
-#goal - get to:
-#in 1 year -- among 4-16 y/o, 0.053 experience first or second infection (on avg across age)
-#^weighted average by age
-#agedist*sum in line 240/(agedist)
-#in 2 years -- among 4-16 y/o, 0.103 experience first or second infection (on avg across age)
-# ^^^ p (probability of an event in the control group)
-# ^^^ effect size will be 30% (1-0.3)*(0.103)
-#1-(1-0.053)^(# years)
-
-#normal-distributed
-#null_mu +/- 1.96*(sd/(sqrt(n))) = 95% CI
-#P(X_a > cutoff) = power (known)
-#n = (z_alpha/2 + z_beta)^2/(delta^2)
-#z_beta = z for power beta
-#delta = mu_null - mu_alt (aka effect size)
-
-#for cRCTS
-#c = 1+(z_alpha/2 + z_beta)^2*((lambda_0 + lambda_A)/y + k^2(lambda_0 + lambda_A)^2) / (lambda_0 - lambda_A)^2
-#c = clusters per arm
-#y = number of people per cluster
-#k = between-cluster coefficient of variation
-# more clusters w/ fewer people is preferable if outcomes correlated within a cluster
-
-#cRCTs for binary outcomes
-#c = 1 + (z_alpha/2 + z_beta)^2((pi_0*(1-pi_0)))
+#value of lambda where I2_vec/I2_vec[38] is closest to 38
+abline(h = lambda_vals[15])
 
 
-#things to vary -- effect size, k, n, cluster
-#k = 0.15
+#* Calculating rho ---------------------------------------------------------
 
-##other ideas -- imbalanced, by events
+rho <- (100/10000)/I2_vec[38]
+
+# Calculating I1 and I2 in Gampaha ----------------------------------------
+
+dengue_c_df <- infection_probs(lambda = rep(lambda_vals[15], length(years)), 
+                               max_age = max_age, 
+                               P_D_mat = P_D_mat, 
+                               df = dengue,
+                               verbose = 0)
+
+#proportion of population who experience primary or secondary infections per year
+ageRange <- 4:16
+inf_c <- sum(AgeDist[ageRange]*
+               rowSums(dengue_c_df[length(years)-1,ageRange,c("I1","I2")]))/sum(AgeDist[ageRange])
+
+inf_c_2yr <- 1-(1-inf_c)^2
+
+case_c_2yr <- 1-(1-(77/10000))^2
 
 
 
