@@ -76,7 +76,7 @@ lines(x=20:200, y=cl.perarm.inf_k2_e3, col="red")
 lines(x=20:200, y=cl.perarm.inf_k3_e3, col="green")
 legend("topright", legend=c("k=0.02", 
                             "k=0.15",
-                            "k=0.25"), col=c("black", "red", "green"))
+                            "k=0.25"), col=c("black", "red", "green"), lty=1)
 
 mtext("Subject enrollment using infections as events", line=0, side=3, outer=TRUE, cex=1.2)
 
@@ -134,7 +134,7 @@ lines(x=20:200, y=cl.perarm.case_k2_e3, col="red")
 lines(x=20:200, y=cl.perarm.case_k3_e3, col="green")
 legend("topright", legend=c("k=0.02", 
                             "k=0.15",
-                            "k=0.25"), col=c("black", "red", "green"))
+                            "k=0.25"), col=c("black", "red", "green"), lty=1)
 
 mtext("Subject enrollment using cases as events", line=0, side=3, outer=TRUE, cex=1.2)
 
