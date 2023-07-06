@@ -191,8 +191,6 @@ for(i in 1:length(lambda_vals)){
   
 }
 
-(100/10000)/(I2_vec[38]/10000)
-
 #set 1 for each age group (not 100)
 #multiply I2 by the number of children in each age group
 #max age is 60
@@ -203,15 +201,13 @@ abline(h = lambda_vals[38])
 abline(v = 0.77)
 abline(h = lambda_vals[24])
 
-sum(AgeDist[1:60]*dengue_df[length(years)-1,1:60,"D2"])*10000
+rho <- (100/10000)/(I2_vec[38]/10000)
 
-dengue_c_df <- infection_probs( lambda = rep(0.023, length(years)), 
-                                max_age = max_age, 
-                                P_D_mat = P_D_mat, 
-                                df = dengue, 
-                                verbose = 0 )
-
-sum(AgeDist[1:60]*dengue_c_df[length(years)-1,1:60,"I2"])
+dengue_df <- infection_probs(lambda = rep(lambda_vals[i], length(years)), 
+                             max_age = max_age, 
+                             P_D_mat = P_D_mat, 
+                             df = dengue, 
+                             verbose = 0)
 
 #divide I2_vec by the I2_vec val when lambda = 0.037
 
