@@ -174,7 +174,7 @@ dengue_g_df <- infection_probs(lambda = rep(lambda_vals[15], length(years)),
 #proportion of population who experience primary or secondary infections per year
 ageRange <- 4:16
 inf_c <- sum(AgeDist[ageRange]*
-               rowSums(dengue_c_df[length(years)-1,ageRange,c("I1","I2")]))/sum(AgeDist[ageRange])
+               rowSums(dengue_g_df[length(years)-1,ageRange,c("I1","I2")]))/sum(AgeDist[ageRange])
 
 inf_c_2yr <- 1-(1-inf_c)^2
 
