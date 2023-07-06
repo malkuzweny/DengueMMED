@@ -165,7 +165,7 @@ rho <- (100/10000)/I2_vec[38]
 
 # Calculating I1 and I2 in Gampaha ----------------------------------------
 
-dengue_c_df <- infection_probs(lambda = rep(lambda_vals[15], length(years)), 
+dengue_g_df <- infection_probs(lambda = rep(lambda_vals[15], length(years)), 
                                max_age = max_age, 
                                P_D_mat = P_D_mat, 
                                df = dengue,
