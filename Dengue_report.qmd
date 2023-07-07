@@ -1,8 +1,14 @@
 ---
 title: "Modelling Dengue Fever in Sri-Lanka to inform Study Design"
-author: Brian
+author: 
+  - Brian Brummer
+  - Mariken de Wit
+  - Manar Alkuzweny
+  - Robert Reiner
 
-format: html
+format: 
+  html: default
+  pptx: default
 
 editor: visual
 filters:
@@ -21,20 +27,26 @@ source("samplesizeCalc.R")
 
 ```
 
-## Introduction/Background
+## Introduction
 
-Dengue causes 400 million infections worldwide every year, leading to 100 million becoming ill and 21,000 deaths (making it the most impactful arboviral disease in humans).
-Case incidence increased rapidly from 0.5 million in 2000 to 5 million in 2019.
-https://www.who.int/news-room/fact-sheets/detail/dengue-and-severe-dengue
-https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3651993/
-https://www.cdc.gov/dengue/training/cme/ccm/page51440.html
-Four serotypes
-Second infection most severe
-Since early 2000s dengue outbreaks in Sri Lanka have become larger and multiple serotypes are now circulating [FOI Sri Lanka paper 2013]
-Vector control is main focus of prevention efforts
+Dengue causes 400 million infections worldwide every year, leading to 100 million becoming ill and 21,000 deaths (making it the most impactful arboviral disease in humans). Case incidence is increasing exponentially, from 0.5 million cases in 2000 to 5 million in 2019.[@worldhealthorganization2023DengueSevereDengue; @kularatne2022DengueInfectionGlobal; @bhatt2013GlobalDistributionBurden]
 
-## Research questions 
+Four serotypes Second infection most severe Since early 2000s dengue outbreaks in Sri Lanka have become larger and multiple serotypes are now circulating [@tam2013EstimatesDengueForce] Vector control is main focus of prevention efforts [@achee2015CriticalAssessmentVector; @kanakaratne2009SevereDengueEpidemics].
 
+## Background
+
+Background on trial Based on cluster randomized controlled trial (cRCT) of spatial repellents currently being conducted in Sri Lanka A trial for the same intervention was recently conducted in Iquitos, Peru Primary endpoint: seroconversion of baseline seronegative/monotypic individuals Parallel cluster-randomized controlled trial with 13 clusters per arm (26 clusters total), 60 individuals in each cluster Ran for approximately 3 years Spatial repellents reduced Aedes-borne virus transmission by 34.1% (a significant difference) Iquitos and SL have different FoIs and reporting rates, which affects endpoint and sample size calcuations
+
+```{r}
+#| label: fig-mapbhatt
+#| fig-cap: "Taken from Bhatt, et al. (2013)  [@bhatt2013GlobalDistributionBurden] , Shows 'a cartogram of the annual number of infections for all ages as a proportion of national or sub-national (China) geographical area.' "
+#| echo: false
+knitr::include_graphics("map_bhatt.png")
+```
+
+## Research questions
+
+How many individuals do we need to include in our trial of an intervention against dengue, and how does this differ by endpoint?
 
 ## Objectives
 
@@ -46,14 +58,14 @@ Vector control is main focus of prevention efforts
 
 4.  Using the Rho from Colombo, find the number of, passive surveillance cases, acive surveillance cases and Infections (through seroprevalence. Find Lambda with disease in Gampaha with the Rho of Colombo
 
-5.  Calculate the number of participants needed in a cluster randomised trial.  
+5.  Calculate the number of participants needed in a cluster randomised trial.
 
 ## Methods
 
-
 ```{r}
-#| label: fig-salde
+#| label: fig-slade
 #| fig-cap: "SLADE model diagram. Note: Time steps nor all compartments are displayed."
+#| echo: false
 knitr::include_graphics("Blank diagram.png")
 ```
 
@@ -84,8 +96,6 @@ $$
 
 We estimated the relationship between force of infection and reported cases in Colombo, assuming all reported cases are due to secondary infections. We also assumed the force of infection to case relationship is the same in both areas.
 
-
-
 ### Case definitions
 
 We assume 100% Sensitivity and specificity in all diagnostics.
@@ -109,6 +119,7 @@ We assume age distribution in Gampaha and Colombo are the same.
 ## Power Calculations
 
 ### Equations
+
 $$
 n= (Z_\frac{\alpha}{2} \quad + \quad Z_\beta) ^2 \frac{\pi_0(1-\pi_0) + \pi_A(1-\pi_A)}{(\pi_0 - \pi_A)^2 }
 $$
@@ -122,7 +133,9 @@ c = 1 + (Z_\frac{\alpha}{2} \quad + \quad Z_\beta) ^2 \frac{\frac{\pi_0(1-\pi_0)
 $$
 
 ## Results
+
 ### 
+
 ```{r}
 #| label: fig-lambdacalc
 #| fig-cap: "DIagram of the proportion of estimated to Colombo with varying Force of infection. We assume Colombo has a lambda of 0.037 ( derived from Primary infection incidence) and that Gampaha has 77% of the cases in Colombo. We also assume that cases are secondary infections." 
@@ -139,7 +152,9 @@ abline(v = 0.77)
 abline(h = lambda_vals[15])
 }
 ```
+
 ### Model output
+
 ```{r}
 #| label: fig-modeloutput
 #| fig-cap: "Output"
@@ -153,77 +168,13 @@ source("createPlots.R")
 #| label: fig-sampsi
 #| fig-cap: "The sample sizes needed to show \_pi sample size for k clusters and n participants."
 #| echo: false
-
-
-
-{
- cl.perarm.case_k1_e1 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
-                                     treatment_effect = effectsizes[1], k = k_vec[1], 
-                                     nr.percluster = 20:200)
-  cl.perarm.case_k2_e1 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
-                                     treatment_effect = effectsizes[1], k = k_vec[2], 
-                                     nr.percluster = 20:200)
-  cl.perarm.case_k3_e1 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
-                                     treatment_effect = effectsizes[1], k = k_vec[3], 
-                                     nr.percluster = 20:200)
-  
-  dev.new(width=12, height=5, noRStudioGD = TRUE, units = "in")
-  
-  layout(matrix(1:3, ncol=3, byrow=T))
-  par(oma=c(0,0,2,0))
-  
-  plot(x=20:200, y=cl.perarm.case_k1_e1, type="l", col="black", 
-       xlab="Number of children\nper cluster", ylab="Number of clusters per arm", 
-       main="Effect size: 0.25",
-       log="y")
-  lines(x=20:200, y=cl.perarm.case_k2_e1, col="red")
-  lines(x=20:200, y=cl.perarm.case_k3_e1, col="green")
-  
-  cl.perarm.case_k1_e2 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
-                                     treatment_effect = effectsizes[2], k = k_vec[1], 
-                                     nr.percluster = 20:200)
-  cl.perarm.case_k2_e2 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
-                                     treatment_effect = effectsizes[2], k = k_vec[2], 
-                                     nr.percluster = 20:200)
-  cl.perarm.case_k3_e2 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
-                                     treatment_effect = effectsizes[2], k = k_vec[3], 
-                                     nr.percluster = 20:200)
-  
-  plot(x=20:200, y=cl.perarm.case_k1_e2, type="l", col="black", 
-       xlab="Number of children\nper cluster", ylab="Number of clusters per arm",
-       main="Effect size: 0.3",
-       log="y")
-  lines(x=20:200, y=cl.perarm.case_k2_e2, col="red")
-  lines(x=20:200, y=cl.perarm.case_k3_e2, col="green")
-  
-  cl.perarm.case_k1_e3 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
-                                     treatment_effect = effectsizes[3], k = k_vec[1], 
-                                     nr.percluster = 20:200)
-  cl.perarm.case_k2_e3 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
-                                     treatment_effect = effectsizes[3], k = k_vec[2], 
-                                     nr.percluster = 20:200)
-  cl.perarm.case_k3_e3 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
-                                     treatment_effect = effectsizes[3], k = k_vec[3], 
-                                     nr.percluster = 20:200)
-  
-  plot(x=20:200, y=cl.perarm.case_k1_e3, type="l", col="black", 
-       xlab="Number of children\nper cluster", ylab="Number of clusters per arm",
-       main="Effect size: 0.35",
-       log="y")
-  lines(x=20:200, y=cl.perarm.case_k2_e3, col="red")
-  lines(x=20:200, y=cl.perarm.case_k3_e3, col="green")
-  legend("topright", legend=c("k=0.02", 
-                              "k=0.15",
-                              "k=0.25"), col=c("black", "red", "green"), lty=1)
-  
-  mtext("Subject enrollment using cases as events", line=0, side=3, outer=TRUE, cex=1.2)
-  
-  
-}
+plot_sample_infections()
 ```
 
 ```{r}
-
+#| label: fig-sampsiinfection
+#| fig-cap: "The Sample sizes needed to show \_pi sample size for k clusters and n participants."
+#| echo: false
 
 plot_sample_infections()
 
@@ -231,5 +182,26 @@ plot_sample_infections()
 
 We present the samples size on the x axis and clusters on the y axis for varying effect size $\pi_{diff}$ and inter-cluster coefficient $k$.
 
-
 ## Next Steps
+
+-   Time-varying force of infection
+
+-   Time-varying serotype circulation (which serotypes, how many serotypes)
+
+-   Making the model stochastic (i.e. doing a random draw based on the probability of infection)
+
+-   Using a range of force of infection estimates for a few years (reflecting inter-annual variation of FoI during the trial)
+
+-   Accounting for temporary- and maternal antibody-induced cross-protection (if we run the model on a smaller timestep)
+
+-   Variation in detection probability (age-dependent, time-varying, dependent on force of infection)
+
+-   Account for sensitivity and specificity of test (for detecting seronegatives and monotypic individuals)
+
+-   Account for loss to follow-up
+
+-   Account for the number of children we would need to test (when using infections as events) and what proportion would need to be excluded due to existing multitypic immunity
+
+-   Cost-effectiveness of using different events (seroconversion vs. reported cases) as endpoints (accounting for cost of testing, number of participants to be followed, length of study)
+
+## References
