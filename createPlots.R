@@ -1,6 +1,6 @@
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+#setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
-source("dengue_working.R")
+#source("dengue_working.R")
 
 library(RColorBrewer)
 
