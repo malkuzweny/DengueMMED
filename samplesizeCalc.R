@@ -36,8 +36,6 @@ cl.perarm.inf_k3_e1 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.091,
                                   treatment_effect = effectsizes[1], k = k_vec[3], 
                                   nr.percluster = 20:200)
 
-dev.new(width=12, height=5, noRStudioGD = TRUE, units = "in")
-
 layout(matrix(1:3, ncol=3, byrow=T))
 par(oma=c(0,0,2,0))
 
@@ -98,8 +96,6 @@ cl.perarm.case_k3_e1 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015,
                                   treatment_effect = effectsizes[1], k = k_vec[3], 
                                   nr.percluster = 20:200)
 
-dev.new(width=12, height=5, noRStudioGD = TRUE, units = "in")
-
 layout(matrix(1:3, ncol=3, byrow=T))
 par(oma=c(0,0,2,0))
 
@@ -159,8 +155,6 @@ plot_sample_cases_log10 <- function(){
   cl.perarm.case_k3_e1 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
                                      treatment_effect = effectsizes[1], k = k_vec[3], 
                                      nr.percluster = 20:200)
-  
-  dev.new(width=12, height=5, noRStudioGD = TRUE, units = "in")
   
   layout(matrix(1:3, ncol=3, byrow=T))
   par(oma=c(0,0,2,0))
