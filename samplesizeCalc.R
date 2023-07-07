@@ -87,7 +87,7 @@ mtext("Subject enrollment using infections as events", line=0, side=3, outer=TRU
 }
 
 # using cases as events
-plot_sample_cases<- function(){
+plot_sample_cases <- function(){
 cl.perarm.case_k1_e1 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
                                   treatment_effect = effectsizes[1], k = k_vec[1], 
                                   nr.percluster = 20:200)
