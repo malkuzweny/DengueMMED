@@ -72,12 +72,6 @@ $$
 PassiveCase  = I2*P(case|I2)
 $$
 
-**Active Surveillance** - Symptomatic infections identified by active surveillance in Gampaha in year x.
-
-$$
-ActiveCase = I2 * P(D2|I2)
-$$
-
 **Infection Surveillance** - Any positive identified by Dengue IgG or IgM in Gampaha in year x.
 
 $$
@@ -95,13 +89,12 @@ n= (Z_\frac{\alpha}{2} \quad + \quad Z_\beta) ^2 \frac{\pi_0(1-\pi_0) + \pi_A(1-
 $$
 
 $$
-\text{assuming} ; n ; \text{individuals per cluster, the necessary number of clusters is calculated:} 
+\text{assuming} \; n \; \text{individuals per cluster, the necessary number of clusters is calculated:} 
 $$
 
 $$
 c = 1 + (Z_\frac{\alpha}{2} \quad + \quad Z_\beta) ^2 \frac{\frac{\pi_0(1-\pi_0)}{n}+ \frac{ \pi_A(1-\pi_A)}{n} + k^2 (\pi_0^2 + \pi_A^2) }{(\pi_0 - \pi_A)^2 }
 $$
-
 
 ## Results
 
@@ -121,6 +114,7 @@ source("samplesizeCalc.R")
 plot<- plot_sample_cases()
 plot
 ```
+
 ```{r}
 #| label: fig-sampsiinfection
 #| fig-cap: "Sample size calculation for infection"
@@ -129,7 +123,8 @@ plot
 plot_sample_infections()
 
 ```
-We present the samples size on the x axis and clusters on the y axis for varying effect size $\pi_{diff}$ and inter-cluster coefficient $k$. 
+
+We present the samples size on the x axis and clusters on the y axis for varying effect size $\pi_{diff}$ and inter-cluster coefficient $k$.
 
 ### Passive surveillance
 
