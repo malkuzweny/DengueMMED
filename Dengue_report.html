@@ -101,7 +101,8 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#introductionbackground" id="toc-introductionbackground" class="nav-link active" data-scroll-target="#introductionbackground">Introduction/Background</a></li>
+  <li><a href="#research-questions" id="toc-research-questions" class="nav-link" data-scroll-target="#research-questions">Research questions</a></li>
   <li><a href="#objectives" id="toc-objectives" class="nav-link" data-scroll-target="#objectives">Objectives</a></li>
   <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
   <ul class="collapse">
@@ -109,23 +110,21 @@ div.csl-indent {
   </ul></li>
   <li><a href="#obtaining-disease-data-for-colombo-and-gampaha" id="toc-obtaining-disease-data-for-colombo-and-gampaha" class="nav-link" data-scroll-target="#obtaining-disease-data-for-colombo-and-gampaha">Obtaining disease data for Colombo and Gampaha</a></li>
   <li><a href="#calculate-rho" id="toc-calculate-rho" class="nav-link" data-scroll-target="#calculate-rho">Calculate Rho</a></li>
-  <li><a href="#determine-lambda-in-gampaha" id="toc-determine-lambda-in-gampaha" class="nav-link" data-scroll-target="#determine-lambda-in-gampaha">Determine Lambda in Gampaha</a></li>
-  <li><a href="#find-number-of-cases-in-gampaha" id="toc-find-number-of-cases-in-gampaha" class="nav-link" data-scroll-target="#find-number-of-cases-in-gampaha">Find number of cases in Gampaha</a>
+  <li><a href="#determine-lambda-in-gampaha" id="toc-determine-lambda-in-gampaha" class="nav-link" data-scroll-target="#determine-lambda-in-gampaha">Determine Lambda in Gampaha</a>
   <ul class="collapse">
   <li><a href="#case-definitions" id="toc-case-definitions" class="nav-link" data-scroll-target="#case-definitions">Case definitions</a></li>
   </ul></li>
   <li><a href="#assumptions" id="toc-assumptions" class="nav-link" data-scroll-target="#assumptions">Assumptions</a></li>
-  <li><a href="#power-calcs" id="toc-power-calcs" class="nav-link" data-scroll-target="#power-calcs">Power Calcs</a></li>
+  <li><a href="#power-calculations" id="toc-power-calculations" class="nav-link" data-scroll-target="#power-calculations">Power Calculations</a>
+  <ul class="collapse">
+  <li><a href="#equations" id="toc-equations" class="nav-link" data-scroll-target="#equations">Equations</a></li>
+  </ul></li>
   <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a>
   <ul class="collapse">
-  <li><a href="#seroprevalence" id="toc-seroprevalence" class="nav-link" data-scroll-target="#seroprevalence">Seroprevalence</a></li>
+  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"></a></li>
   <li><a href="#model-output" id="toc-model-output" class="nav-link" data-scroll-target="#model-output">Model output</a></li>
   </ul></li>
-  <li><a href="#all-i-last-year-per-age." id="toc-all-i-last-year-per-age." class="nav-link" data-scroll-target="#all-i-last-year-per-age.">All I last year, per age.</a>
-  <ul class="collapse">
-  <li><a href="#passive-surveillance" id="toc-passive-surveillance" class="nav-link" data-scroll-target="#passive-surveillance">Passive surveillance</a></li>
-  <li><a href="#infection-surveilance" id="toc-infection-surveilance" class="nav-link" data-scroll-target="#infection-surveilance">Infection Surveilance</a></li>
-  </ul></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next Steps</a></li>
   </ul>
 </nav>
 </div>
@@ -154,9 +153,12 @@ div.csl-indent {
 
 </header>
 
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>Dengue Fever is bits and bob. Its incidence is x. We use a catalytic modelling to inform study design.</p>
+<section id="introductionbackground" class="level2">
+<h2 class="anchored" data-anchor-id="introductionbackground">Introduction/Background</h2>
+<p>Dengue causes 400 million infections worldwide every year, leading to 100 million becoming ill and 21,000 deaths (making it the most impactful arboviral disease in humans). Case incidence increased rapidly from 0.5 million in 2000 to 5 million in 2019. https://www.who.int/news-room/fact-sheets/detail/dengue-and-severe-dengue https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3651993/ https://www.cdc.gov/dengue/training/cme/ccm/page51440.html Four serotypes Second infection most severe Since early 2000s dengue outbreaks in Sri Lanka have become larger and multiple serotypes are now circulating [FOI Sri Lanka paper 2013] Vector control is main focus of prevention efforts</p>
+</section>
+<section id="research-questions" class="level2">
+<h2 class="anchored" data-anchor-id="research-questions">Research questions</h2>
 </section>
 <section id="objectives" class="level2">
 <h2 class="anchored" data-anchor-id="objectives">Objectives</h2>
@@ -165,14 +167,25 @@ div.csl-indent {
 <li><p>Get disease data for Colombo and Gampaha</p></li>
 <li><p>Link lambda with disease in Colombo (find Rho)</p></li>
 <li><p>Using the Rho from Colombo, find the number of, passive surveillance cases, acive surveillance cases and Infections (through seroprevalence. Find Lambda with disease in Gampaha with the Rho of Colombo</p></li>
-<li><p>Power Calculations</p></li>
+<li><p>Calculate the number of participants needed in a cluster randomised trial.</p></li>
 </ol>
 </section>
 <section id="methods" class="level2">
 <h2 class="anchored" data-anchor-id="methods">Methods</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"Blank diagram.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-salde" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Blank%20diagram.png" class="img-fluid figure-img" width="1725"></p>
+<figcaption class="figure-caption">Figure&nbsp;1: SLADE model diagram. Note: Time steps nor all compartments are displayed.</figcaption>
+</figure>
+</div>
+</div>
+</div>
 <section id="deriving-lambda-and-initial-conditions-for-colombo" class="level3">
 <h3 class="anchored" data-anchor-id="deriving-lambda-and-initial-conditions-for-colombo">Deriving lambda and initial conditions for Colombo</h3>
-<p>We take the probability of first infection of ~ 14.1%. (CI x : y ) <span class="citation" data-cites="tam2013EstimatesDengueForce">[<a href="#ref-tam2013EstimatesDengueForce" role="doc-biblioref">1</a>]</span>,</p>
+<p>We take the probability of first infection of ~ 14.1%.<span class="citation" data-cites="tam2013EstimatesDengueForce">[<a href="#ref-tam2013EstimatesDengueForce" role="doc-biblioref">1</a>]</span>,</p>
 <p><span class="math display">\[
 P(First\;Infection|No\;Infection) = 1 - (1 - \lambda)^{4}= 0.141\
 \\\
@@ -195,20 +208,12 @@ therefore \; \lambda = 0.037
 <section id="determine-lambda-in-gampaha" class="level2">
 <h2 class="anchored" data-anchor-id="determine-lambda-in-gampaha">Determine Lambda in Gampaha</h2>
 <p>We estimated the relationship between force of infection and reported cases in Colombo, assuming all reported cases are due to secondary infections. We also assumed the force of infection to case relationship is the same in both areas.</p>
-<p>3 outcomes to keep track of, passive surveilance, acitve surveillance (paper on probability of infection for different numbers) and then looking at the infections (I2 category instead of the D2) category.</p>
-</section>
-<section id="find-number-of-cases-in-gampaha" class="level2">
-<h2 class="anchored" data-anchor-id="find-number-of-cases-in-gampaha">Find number of cases in Gampaha</h2>
 <section id="case-definitions" class="level3">
 <h3 class="anchored" data-anchor-id="case-definitions">Case definitions</h3>
 <p>We assume 100% Sensitivity and specificity in all diagnostics.</p>
 <p><strong>Passive surveillance case</strong> - Symptomatic infections that presents to a health facility in Gampaha in year x.</p>
 <p><span class="math display">\[
 PassiveCase  = I2*P(case|I2)
-\]</span></p>
-<p><strong>Active Surveillance</strong> - Symptomatic infections identified by active surveillance in Gampaha in year x.</p>
-<p><span class="math display">\[
-ActiveCase = I2 * P(D2|I2)
 \]</span></p>
 <p><strong>Infection Surveillance</strong> - Any positive identified by Dengue IgG or IgM in Gampaha in year x.</p>
 <p><span class="math display">\[
@@ -218,78 +223,62 @@ InfectionCase = I2
 </section>
 <section id="assumptions" class="level2">
 <h2 class="anchored" data-anchor-id="assumptions">Assumptions</h2>
-<p>We asume age distribution in Gampaha and Colombo are the same.</p>
+<p>We assume age distribution in Gampaha and Colombo are the same.</p>
 </section>
-<section id="power-calcs" class="level2">
-<h2 class="anchored" data-anchor-id="power-calcs">Power Calcs</h2>
+<section id="power-calculations" class="level2">
+<h2 class="anchored" data-anchor-id="power-calculations">Power Calculations</h2>
+<section id="equations" class="level3">
+<h3 class="anchored" data-anchor-id="equations">Equations</h3>
 <p><span class="math display">\[
 n= (Z_\frac{\alpha}{2} \quad + \quad Z_\beta) ^2 \frac{\pi_0(1-\pi_0) + \pi_A(1-\pi_A)}{(\pi_0 - \pi_A)^2 }
 \]</span></p>
 <p><span class="math display">\[
-\text{assuming} ; n ; \text{individuals per cluster, the necessary number of clusters is calculated:}
+\text{assuming} \; n \; \text{individuals per cluster, the necessary number of clusters is calculated:}
 \]</span></p>
 <p><span class="math display">\[
 c = 1 + (Z_\frac{\alpha}{2} \quad + \quad Z_\beta) ^2 \frac{\frac{\pi_0(1-\pi_0)}{n}+ \frac{ \pi_A(1-\pi_A)}{n} + k^2 (\pi_0^2 + \pi_A^2) }{(\pi_0 - \pi_A)^2 }
 \]</span></p>
 </section>
+</section>
 <section id="results" class="level2">
 <h2 class="anchored" data-anchor-id="results">Results</h2>
-<section id="seroprevalence" class="level3">
-<h3 class="anchored" data-anchor-id="seroprevalence">Seroprevalence</h3>
+<section id="section" class="level3">
+<h3 class="anchored" data-anchor-id="section"></h3>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-lambdacalc" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Dengue_report_files/figure-html/fig-lambdacalc-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;2: DIagram of the proportion of estimated to Colombo with varying Force of infection. We assume Colombo has a lambda of 0.037 ( derived from Primary infection incidence) and that Gampaha has 77% of the cases in Colombo. We also assume that cases are secondary infections.</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="model-output" class="level3">
 <h3 class="anchored" data-anchor-id="model-output">Model output</h3>
-</section>
-</section>
-<section id="all-i-last-year-per-age." class="level1">
-<h1>All I last year, per age.</h1>
 <div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>NULL</code></pre>
-</div>
 <div class="cell-output-display">
-<div id="fig-sampsi" class="quarto-figure quarto-figure-center anchored">
+<div id="fig-modeloutput" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
-<p><img src="Dengue_report_files/figure-html/fig-sampsi-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;1: Sample size calculation for cases</figcaption>
+<p><img src="Dengue_report_files/figure-html/fig-modeloutput-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;3: Output</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_sample_infections</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div id="fig-sampsiinfection" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="Dengue_report_files/figure-html/fig-sampsiinfection-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;2: Sample size calculation for infection</figcaption>
-</figure>
-</div>
-</div>
 </div>
 <p>We present the samples size on the x axis and clusters on the y axis for varying effect size <span class="math inline">\(\pi_{diff}\)</span> and inter-cluster coefficient <span class="math inline">\(k\)</span>.</p>
-<section id="passive-surveillance" class="level3">
-<h3 class="anchored" data-anchor-id="passive-surveillance">Passive surveillance</h3>
-<section id="varying-effect-size" class="level4">
-<h4 class="anchored" data-anchor-id="varying-effect-size">Varying effect size</h4>
 </section>
 </section>
-<section id="infection-surveilance" class="level3">
-<h3 class="anchored" data-anchor-id="infection-surveilance">Infection Surveilance</h3>
-<section id="varying-effect-size-1" class="level4">
-<h4 class="anchored" data-anchor-id="varying-effect-size-1">Varying effect size</h4>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"dengue_working.R"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Dengue_report_files/figure-html/setup-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
+<section id="next-steps" class="level2 unnumbered">
+
 
 </section>
-</section>
-</section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body" role="list">
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">Next Steps</h2><div id="refs" class="references csl-bib-body" role="list">
 <div id="ref-tam2013EstimatesDengueForce" class="csl-entry" role="listitem">
 <div class="csl-left-margin">[1] </div><div class="csl-right-inline">C.C. Tam, H. Tissera, A.M. de Silva, A.D. De Silva, H.S. Margolis, A. Amarasinge, Estimates of <span>Dengue Force</span> of <span>Infection</span> in <span>Children</span> in <span>Colombo</span>, <span>Sri Lanka</span>, PLoS Negl Trop Dis. 7 (2013) e2259. https://doi.org/<a href="https://doi.org/10.1371/journal.pntd.0002259">10.1371/journal.pntd.0002259</a>.</div>
 </div>

@@ -214,4 +214,3 @@ plot_sample_cases_log10 <- function(){
   
 }
 
-

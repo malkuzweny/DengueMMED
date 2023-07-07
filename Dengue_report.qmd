@@ -3,6 +3,7 @@ title: "Modelling Dengue Fever in Sri-Lanka to inform Study Design"
 author: Brian
 
 format: html
+
 editor: visual
 filters:
   - authors-block/authors-block.lua
@@ -13,9 +14,27 @@ csl: Extras/clinical-mass-spectrometry.csl
 toc: true
 ---
 
-## Introduction
+```{r, setup}
+#| echo: false
+source("dengue_working.R")
+source("samplesizeCalc.R")
 
-Dengue Fever is bits and bob. Its incidence is x. We use a catalytic modelling to inform study design.
+```
+
+## Introduction/Background
+
+Dengue causes 400 million infections worldwide every year, leading to 100 million becoming ill and 21,000 deaths (making it the most impactful arboviral disease in humans).
+Case incidence increased rapidly from 0.5 million in 2000 to 5 million in 2019.
+https://www.who.int/news-room/fact-sheets/detail/dengue-and-severe-dengue
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3651993/
+https://www.cdc.gov/dengue/training/cme/ccm/page51440.html
+Four serotypes
+Second infection most severe
+Since early 2000s dengue outbreaks in Sri Lanka have become larger and multiple serotypes are now circulating [FOI Sri Lanka paper 2013]
+Vector control is main focus of prevention efforts
+
+## Research questions 
+
 
 ## Objectives
 
@@ -27,13 +46,20 @@ Dengue Fever is bits and bob. Its incidence is x. We use a catalytic modelling t
 
 4.  Using the Rho from Colombo, find the number of, passive surveillance cases, acive surveillance cases and Infections (through seroprevalence. Find Lambda with disease in Gampaha with the Rho of Colombo
 
-5.  Power Calculations
+5.  Calculate the number of participants needed in a cluster randomised trial.  
 
 ## Methods
 
+
+```{r}
+#| label: fig-salde
+#| fig-cap: "SLADE model diagram. Note: Time steps nor all compartments are displayed."
+knitr::include_graphics("Blank diagram.png")
+```
+
 ### Deriving lambda and initial conditions for Colombo
 
-We take the probability of first infection of \~ 14.1%. (CI x : y ) [@tam2013EstimatesDengueForce],
+We take the probability of first infection of \~ 14.1%.[@tam2013EstimatesDengueForce],
 
 $$
 P(First\;Infection|No\;Infection) = 1 - (1 - \lambda)^{4}= 0.141\
@@ -58,9 +84,7 @@ $$
 
 We estimated the relationship between force of infection and reported cases in Colombo, assuming all reported cases are due to secondary infections. We also assumed the force of infection to case relationship is the same in both areas.
 
-3 outcomes to keep track of, passive surveilance, acitve surveillance (paper on probability of infection for different numbers) and then looking at the infections (I2 category instead of the D2) category.
 
-## Find number of cases in Gampaha
 
 ### Case definitions
 
@@ -80,10 +104,11 @@ $$
 
 ## Assumptions
 
-We asume age distribution in Gampaha and Colombo are the same.
+We assume age distribution in Gampaha and Colombo are the same.
 
-## Power Calcs
+## Power Calculations
 
+### Equations
 $$
 n= (Z_\frac{\alpha}{2} \quad + \quad Z_\beta) ^2 \frac{\pi_0(1-\pi_0) + \pi_A(1-\pi_A)}{(\pi_0 - \pi_A)^2 }
 $$
@@ -97,27 +122,107 @@ c = 1 + (Z_\frac{\alpha}{2} \quad + \quad Z_\beta) ^2 \frac{\frac{\pi_0(1-\pi_0)
 $$
 
 ## Results
-
-### Seroprevalence
-
-### Model output
-
-# All I last year, per age.
-
+### 
 ```{r}
-#| label: fig-sampsi
-#| fig-cap: "Sample size calculation for cases"
+#| label: fig-lambdacalc
+#| fig-cap: "DIagram of the proportion of estimated to Colombo with varying Force of infection. We assume Colombo has a lambda of 0.037 ( derived from Primary infection incidence) and that Gampaha has 77% of the cases in Colombo. We also assume that cases are secondary infections." 
 #| echo: false
 
-source("samplesizeCalc.R")
+{
+plot(x = I2_vec/I2_vec[38], y = lambda_vals, type = "l", 
+     xlab = "Modelled cases proportional to Colombo" , 
+     ylab = "Force of Infection")
+abline(v = 1.0)
+abline(h = lambda_vals[38])
+abline(v = 0.77)
+#value of lambda where I2_vec/I2_vec[38] is closest to 38
+abline(h = lambda_vals[15])
+}
+```
+### Model output
+```{r}
+#| label: fig-modeloutput
+#| fig-cap: "Output"
+#| echo: false
 
-plot<- plot_sample_cases()
-plot
+source("createPlots.R")
+
 ```
 
 ```{r}
-#| label: fig-sampsiinfection
-#| fig-cap: "Sample size calculation for infection"
+#| label: fig-sampsi
+#| fig-cap: "The sample sizes needed to show \_pi sample size for k clusters and n participants."
+#| echo: false
+
+
+
+{
+ cl.perarm.case_k1_e1 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
+                                     treatment_effect = effectsizes[1], k = k_vec[1], 
+                                     nr.percluster = 20:200)
+  cl.perarm.case_k2_e1 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
+                                     treatment_effect = effectsizes[1], k = k_vec[2], 
+                                     nr.percluster = 20:200)
+  cl.perarm.case_k3_e1 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
+                                     treatment_effect = effectsizes[1], k = k_vec[3], 
+                                     nr.percluster = 20:200)
+  
+  dev.new(width=12, height=5, noRStudioGD = TRUE, units = "in")
+  
+  layout(matrix(1:3, ncol=3, byrow=T))
+  par(oma=c(0,0,2,0))
+  
+  plot(x=20:200, y=cl.perarm.case_k1_e1, type="l", col="black", 
+       xlab="Number of children\nper cluster", ylab="Number of clusters per arm", 
+       main="Effect size: 0.25",
+       log="y")
+  lines(x=20:200, y=cl.perarm.case_k2_e1, col="red")
+  lines(x=20:200, y=cl.perarm.case_k3_e1, col="green")
+  
+  cl.perarm.case_k1_e2 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
+                                     treatment_effect = effectsizes[2], k = k_vec[1], 
+                                     nr.percluster = 20:200)
+  cl.perarm.case_k2_e2 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
+                                     treatment_effect = effectsizes[2], k = k_vec[2], 
+                                     nr.percluster = 20:200)
+  cl.perarm.case_k3_e2 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
+                                     treatment_effect = effectsizes[2], k = k_vec[3], 
+                                     nr.percluster = 20:200)
+  
+  plot(x=20:200, y=cl.perarm.case_k1_e2, type="l", col="black", 
+       xlab="Number of children\nper cluster", ylab="Number of clusters per arm",
+       main="Effect size: 0.3",
+       log="y")
+  lines(x=20:200, y=cl.perarm.case_k2_e2, col="red")
+  lines(x=20:200, y=cl.perarm.case_k3_e2, col="green")
+  
+  cl.perarm.case_k1_e3 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
+                                     treatment_effect = effectsizes[3], k = k_vec[1], 
+                                     nr.percluster = 20:200)
+  cl.perarm.case_k2_e3 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
+                                     treatment_effect = effectsizes[3], k = k_vec[2], 
+                                     nr.percluster = 20:200)
+  cl.perarm.case_k3_e3 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
+                                     treatment_effect = effectsizes[3], k = k_vec[3], 
+                                     nr.percluster = 20:200)
+  
+  plot(x=20:200, y=cl.perarm.case_k1_e3, type="l", col="black", 
+       xlab="Number of children\nper cluster", ylab="Number of clusters per arm",
+       main="Effect size: 0.35",
+       log="y")
+  lines(x=20:200, y=cl.perarm.case_k2_e3, col="red")
+  lines(x=20:200, y=cl.perarm.case_k3_e3, col="green")
+  legend("topright", legend=c("k=0.02", 
+                              "k=0.15",
+                              "k=0.25"), col=c("black", "red", "green"), lty=1)
+  
+  mtext("Subject enrollment using cases as events", line=0, side=3, outer=TRUE, cex=1.2)
+  
+  
+}
+```
+
+```{r}
 
 
 plot_sample_infections()
@@ -126,21 +231,5 @@ plot_sample_infections()
 
 We present the samples size on the x axis and clusters on the y axis for varying effect size $\pi_{diff}$ and inter-cluster coefficient $k$.
 
-### Passive surveillance
 
-#### Varying effect size
-
-### Infection Surveilance
-
-#### Varying effect size
-
-```{r, setup}
-source("dengue_working.R")
-
-```
-
-```{r}
-#| label: fig-samplesize 
-#| #| fig-cap: "The Sample sizes needed to show \_pi sample size for k clusters and n participants."
-
-```
+## Next Steps
