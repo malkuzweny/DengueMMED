@@ -1,4 +1,7 @@
 
+font.size <- 2
+lwd <- 4
+
 # Do power calculation ----------------------------------------------------
 
 run.sscalc <- function(z_a2, z_b, pi_0, treatment_effect, k, nr.percluster) {
@@ -39,11 +42,11 @@ cl.perarm.inf_k3_e1 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.091,
 layout(matrix(1:3, ncol=3, byrow=T))
 par(oma=c(0,0,2,0))
 
-plot(x=20:200, y=cl.perarm.inf_k1_e1, type="l", col="black", ylim=c(0,20), 
+plot(x=20:200, y=cl.perarm.inf_k1_e1, type="l", col="black", ylim=c(0,20), lwd=lwd, 
      xlab="Number of children\nper cluster", ylab="Number of clusters per arm",
-     main="Effect size: 0.25")
-lines(x=20:200, y=cl.perarm.inf_k2_e1, col="red")
-lines(x=20:200, y=cl.perarm.inf_k3_e1, col="green")
+     main="Effect size: 0.25", cex.axis=font.size, cex.lab=font.size)
+lines(x=20:200, y=cl.perarm.inf_k2_e1, col="red", lwd=lwd)
+lines(x=20:200, y=cl.perarm.inf_k3_e1, col="green", lwd=lwd)
 
 cl.perarm.inf_k1_e2 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.091, 
                                   treatment_effect = effectsizes[2], k = k_vec[1], 
@@ -55,11 +58,11 @@ cl.perarm.inf_k3_e2 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.091,
                                   treatment_effect = effectsizes[2], k = k_vec[3], 
                                   nr.percluster = 20:200)
 
-plot(x=20:200, y=cl.perarm.inf_k1_e2, type="l", col="black", ylim=c(0,20), 
+plot(x=20:200, y=cl.perarm.inf_k1_e2, type="l", col="black", ylim=c(0,20), lwd=lwd,
      xlab="Number of children\nper cluster", ylab="Number of clusters per arm",
-     main="Effect size: 0.3")
-lines(x=20:200, y=cl.perarm.inf_k2_e2, col="red")
-lines(x=20:200, y=cl.perarm.inf_k3_e2, col="green")
+     main="Effect size: 0.3", cex.axis=font.size, cex.lab=font.size)
+lines(x=20:200, y=cl.perarm.inf_k2_e2, col="red", lwd=lwd)
+lines(x=20:200, y=cl.perarm.inf_k3_e2, col="green", lwd=lwd)
 
 cl.perarm.inf_k1_e3 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.091, 
                                   treatment_effect = effectsizes[3], k = k_vec[1], 
@@ -171,7 +174,7 @@ plot_sample_cases_log10 <- function(){
                                      nr.percluster = 20:200)
   cl.perarm.case_k2_e2 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
                                      treatment_effect = effectsizes[2], k = k_vec[2], 
-                                     nr.percluster = 20:200)
+                                     nr.percluster = 20:2000)
   cl.perarm.case_k3_e2 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
                                      treatment_effect = effectsizes[2], k = k_vec[3], 
                                      nr.percluster = 20:200)
@@ -208,3 +211,21 @@ plot_sample_cases_log10 <- function(){
   
 }
 
+
+# plots for presentations -------------------------------------------------
+# infection
+par(mar = c(5.1, 5.1, 4.1, 2.1))
+
+plot(x=20:200, y=cl.perarm.inf_k2_e2, type="l", col="black", ylim=c(0,20), lwd=lwd,
+     xlab="Number of children per cluster", ylab="Number of clusters per arm",
+     main="Effect size: 0.3", cex.axis=font.size, cex.lab=font.size, cex.main=font.size)
+abline(h=15, lwd=lwd, lty=2)
+abline(v=148, lwd=lwd, lty=2)
+
+# disease
+plot(x=20:2000, y=cl.perarm.case_k2_e2, type="l", col="black", lwd=lwd,
+     xlab="Number of people per cluster", ylab="Number of clusters per arm",
+     main="Effect size: 0.3", cex.axis=font.size, cex.lab=font.size, cex.main=font.size,
+     log="y", ylim=c(10,500), xlim=c(0,1000))
+abline(h=15, lwd=lwd, lty=2)
+abline(v=980, lwd=lwd, lty=2)
