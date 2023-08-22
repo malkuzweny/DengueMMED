@@ -148,6 +148,16 @@ for(i in 1:length(lambda_vals)){
 }
 
 
+plot(x = I2_vec/I2_vec[38], y = lambda_vals, type = "l", 
+     xlab = "Modelled cases proportional to Colombo" , 
+     ylab = "Force of Infection")
+abline(v = 1.0)
+abline(h = lambda_vals[38])
+abline(v = 0.77)
+#value of lambda where I2_vec/I2_vec[38] is closest to 38
+abline(h = lambda_vals[15])
+
+
 # plot proportion of people with second infection at equilibrium relative to prop of people
 # with second infection in Colombo for a range of FOIs. this is used to find out the FOI
 # in the region where prop of people with second infection is 77% of that in Colombo
