@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Brian">
+<meta name="author" content="Brian Brummer, Mariken de Wit, Manar Alkuzweny, and Robert Reiner">
 
 <title>Modelling Dengue Fever in Sri-Lanka to inform Study Design</title>
 <style>
@@ -20,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 /* CSS for citations */
 div.csl-bib-body { }
@@ -125,8 +91,9 @@ div.csl-indent {
   <li><a href="#model-output" id="toc-model-output" class="nav-link" data-scroll-target="#model-output">Model output</a></li>
   </ul></li>
   <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next Steps</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
-</nav>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Dengue_report.pptx"><i class="bi bi-file-slides"></i>Powerpoint</a></li></ul></div></nav>
 </div>
 <main class="content" id="quarto-document-content">
 
@@ -140,9 +107,12 @@ div.csl-indent {
 <div class="quarto-title-meta">
 
     <div>
-    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-heading">Authors</div>
     <div class="quarto-title-meta-contents">
-             <p>Brian </p>
+             <p>Brian Brummer </p>
+             <p>Mariken de Wit </p>
+             <p>Manar Alkuzweny </p>
+             <p>Robert Reiner </p>
           </div>
   </div>
     
@@ -155,7 +125,18 @@ div.csl-indent {
 
 <section id="introductionbackground" class="level2">
 <h2 class="anchored" data-anchor-id="introductionbackground">Introduction/Background</h2>
-<p>Dengue causes 400 million infections worldwide every year, leading to 100 million becoming ill and 21,000 deaths (making it the most impactful arboviral disease in humans). Case incidence increased rapidly from 0.5 million in 2000 to 5 million in 2019. https://www.who.int/news-room/fact-sheets/detail/dengue-and-severe-dengue https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3651993/ https://www.cdc.gov/dengue/training/cme/ccm/page51440.html Four serotypes Second infection most severe Since early 2000s dengue outbreaks in Sri Lanka have become larger and multiple serotypes are now circulating [FOI Sri Lanka paper 2013] Vector control is main focus of prevention efforts</p>
+<p>Dengue causes 400 million infections worldwide every year, leading to 100 million becoming ill and 21,000 deaths (making it the most impactful arboviral disease in humans). Case incidence is increasing exponentially, from 0.5 million cases in 2000 to 5 million in 2019.<span class="citation" data-cites="worldhealthorganization2023DengueSevereDengue kularatne2022DengueInfectionGlobal bhatt2013GlobalDistributionBurden">[<a href="#ref-worldhealthorganization2023DengueSevereDengue" role="doc-biblioref">1</a>–<a href="#ref-bhatt2013GlobalDistributionBurden" role="doc-biblioref">3</a>]</span></p>
+<p>Four serotypes Second infection most severe Since early 2000s dengue outbreaks in Sri Lanka have become larger and multiple serotypes are now circulating <span class="citation" data-cites="tam2013EstimatesDengueForce">[<a href="#ref-tam2013EstimatesDengueForce" role="doc-biblioref">4</a>]</span> Vector control is main focus of prevention efforts <span class="citation" data-cites="achee2015CriticalAssessmentVector kanakaratne2009SevereDengueEpidemics">[<a href="#ref-achee2015CriticalAssessmentVector" role="doc-biblioref">5</a>,<a href="#ref-kanakaratne2009SevereDengueEpidemics" role="doc-biblioref">6</a>]</span>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-mapbhatt" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="map_bhatt.png" class="img-fluid figure-img" width="714"></p>
+<figcaption class="figure-caption">Figure&nbsp;1: Taken from Bhatt, et al.&nbsp;(2013) <span class="citation" data-cites="bhatt2013GlobalDistributionBurden">[<a href="#ref-bhatt2013GlobalDistributionBurden" role="doc-biblioref">3</a>]</span> , Shows ‘a cartogram of the annual number of infections for all ages as a proportion of national or sub-national (China) geographical area.’</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="research-questions" class="level2">
 <h2 class="anchored" data-anchor-id="research-questions">Research questions</h2>
@@ -173,19 +154,18 @@ div.csl-indent {
 <section id="methods" class="level2">
 <h2 class="anchored" data-anchor-id="methods">Methods</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"Blank diagram.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-salde" class="quarto-figure quarto-figure-center anchored">
+<div id="fig-slade" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="Blank%20diagram.png" class="img-fluid figure-img" width="1725"></p>
-<figcaption class="figure-caption">Figure&nbsp;1: SLADE model diagram. Note: Time steps nor all compartments are displayed.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;2: SLADE model diagram. Note: Time steps nor all compartments are displayed.</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <section id="deriving-lambda-and-initial-conditions-for-colombo" class="level3">
 <h3 class="anchored" data-anchor-id="deriving-lambda-and-initial-conditions-for-colombo">Deriving lambda and initial conditions for Colombo</h3>
-<p>We take the probability of first infection of ~ 14.1%.<span class="citation" data-cites="tam2013EstimatesDengueForce">[<a href="#ref-tam2013EstimatesDengueForce" role="doc-biblioref">1</a>]</span>,</p>
+<p>We take the probability of first infection of ~ 14.1%.<span class="citation" data-cites="tam2013EstimatesDengueForce">[<a href="#ref-tam2013EstimatesDengueForce" role="doc-biblioref">4</a>]</span>,</p>
 <p><span class="math display">\[
 P(First\;Infection|No\;Infection) = 1 - (1 - \lambda)^{4}= 0.141\
 \\\
@@ -249,7 +229,7 @@ c = 1 + (Z_\frac{\alpha}{2} \quad + \quad Z_\beta) ^2 \frac{\frac{\pi_0(1-\pi_0)
 <div id="fig-lambdacalc" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="Dengue_report_files/figure-html/fig-lambdacalc-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;2: DIagram of the proportion of estimated to Colombo with varying Force of infection. We assume Colombo has a lambda of 0.037 ( derived from Primary infection incidence) and that Gampaha has 77% of the cases in Colombo. We also assume that cases are secondary infections.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;3: DIagram of the proportion of estimated to Colombo with varying Force of infection. We assume Colombo has a lambda of 0.037 ( derived from Primary infection incidence) and that Gampaha has 77% of the cases in Colombo. We also assume that cases are secondary infections.</figcaption>
 </figure>
 </div>
 </div>
@@ -262,25 +242,60 @@ c = 1 + (Z_\frac{\alpha}{2} \quad + \quad Z_\beta) ^2 \frac{\frac{\pi_0(1-\pi_0)
 <div id="fig-modeloutput" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="Dengue_report_files/figure-html/fig-modeloutput-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;3: Output</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;4: Output</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_sample_infections</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-sampsi" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Dengue_report_files/figure-html/fig-sampsi-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;5: The sample sizes needed to show &nbsp;pi sample size for k clusters and n participants.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-sampsiinfection" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Dengue_report_files/figure-html/fig-sampsiinfection-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;6: The Sample sizes needed to show &nbsp;pi sample size for k clusters and n participants.</figcaption>
+</figure>
+</div>
+</div>
 </div>
 <p>We present the samples size on the x axis and clusters on the y axis for varying effect size <span class="math inline">\(\pi_{diff}\)</span> and inter-cluster coefficient <span class="math inline">\(k\)</span>.</p>
 </section>
 </section>
-<section id="next-steps" class="level2 unnumbered">
+<section id="next-steps" class="level2">
+<h2 class="anchored" data-anchor-id="next-steps">Next Steps</h2>
+</section>
+<section id="references" class="level2 unnumbered">
 
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">Next Steps</h2><div id="refs" class="references csl-bib-body" role="list">
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body" role="list">
+<div id="ref-worldhealthorganization2023DengueSevereDengue" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[1] </div><div class="csl-right-inline">W.H. Organization, Dengue and severe dengue, <span>World Health Organizatin (WHO)</span>, 2023.</div>
+</div>
+<div id="ref-kularatne2022DengueInfectionGlobal" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[2] </div><div class="csl-right-inline">S.A. Kularatne, C. Dalugama, Dengue infection: <span>Global</span> importance, immunopathology and management, Clin Med. 22 (2022) 9–13. https://doi.org/<a href="https://doi.org/10.7861/clinmed.2021-0791">10.7861/clinmed.2021-0791</a>.</div>
+</div>
+<div id="ref-bhatt2013GlobalDistributionBurden" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[3] </div><div class="csl-right-inline">S. Bhatt, P.W. Gething, O.J. Brady, J.P. Messina, A.W. Farlow, C.L. Moyes, J.M. Drake, J.S. Brownstein, A.G. Hoen, O. Sankoh, M.F. Myers, D.B. George, T. Jaenisch, G.R.W. Wint, C.P. Simmons, T.W. Scott, J.J. Farrar, S.I. Hay, The global distribution and burden of dengue, Nature. 496 (2013) 504–507. https://doi.org/<a href="https://doi.org/10.1038/nature12060">10.1038/nature12060</a>.</div>
+</div>
 <div id="ref-tam2013EstimatesDengueForce" class="csl-entry" role="listitem">
-<div class="csl-left-margin">[1] </div><div class="csl-right-inline">C.C. Tam, H. Tissera, A.M. de Silva, A.D. De Silva, H.S. Margolis, A. Amarasinge, Estimates of <span>Dengue Force</span> of <span>Infection</span> in <span>Children</span> in <span>Colombo</span>, <span>Sri Lanka</span>, PLoS Negl Trop Dis. 7 (2013) e2259. https://doi.org/<a href="https://doi.org/10.1371/journal.pntd.0002259">10.1371/journal.pntd.0002259</a>.</div>
+<div class="csl-left-margin">[4] </div><div class="csl-right-inline">C.C. Tam, H. Tissera, A.M. de Silva, A.D. De Silva, H.S. Margolis, A. Amarasinge, Estimates of <span>Dengue Force</span> of <span>Infection</span> in <span>Children</span> in <span>Colombo</span>, <span>Sri Lanka</span>, PLoS Negl Trop Dis. 7 (2013) e2259. https://doi.org/<a href="https://doi.org/10.1371/journal.pntd.0002259">10.1371/journal.pntd.0002259</a>.</div>
+</div>
+<div id="ref-achee2015CriticalAssessmentVector" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[5] </div><div class="csl-right-inline">N.L. Achee, F. Gould, T.A. Perkins, R.C. Reiner, A.C. Morrison, S.A. Ritchie, D.J. Gubler, R. Teyssou, T.W. Scott, A <span>Critical Assessment</span> of <span>Vector Control</span> for <span>Dengue Prevention</span>, PLoS Negl Trop Dis. 9 (2015) e0003655. https://doi.org/<a href="https://doi.org/10.1371/journal.pntd.0003655">10.1371/journal.pntd.0003655</a>.</div>
+</div>
+<div id="ref-kanakaratne2009SevereDengueEpidemics" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[6] </div><div class="csl-right-inline">N. Kanakaratne, W.M.P.B. Wahala, W.B. Messer, H.A. Tissera, A. Shahani, N. Abeysinghe, A.M. de Silva, M. Gunasekera, Severe <span>Dengue Epidemics</span> in <span>Sri Lanka</span>, 2003–2006, Emerg. Infect. Dis. 15 (2009) 192–199. https://doi.org/<a href="https://doi.org/10.3201/eid1502.080926">10.3201/eid1502.080926</a>.</div>
 </div>
 </div></section></div></main>
 <!-- /main column -->
