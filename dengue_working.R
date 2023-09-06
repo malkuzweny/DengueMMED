@@ -161,21 +161,20 @@ par(mar = c(5.1, 5.1, 4.1, 2.1))
 
 plot(x = I2_vec/I2_vec[50], y = lambda_vals, type = "l", lwd=lwd,
      xlab="Secondary infections relative to Colombo", ylab="Force of infection", cex.axis=font.size, cex.lab=font.size)
-<<<<<<< HEAD
+
 abline(v = 1.0, lwd=lwd, lty=2)
 abline(h = lambda_vals[50], lwd=lwd, lty=2)
 abline(v = 0.77, lwd=lwd, lty=2)
 #value of lambda where I2_vec/I2_vec[38] is closest to 0.77
 abline(h = lambda_vals[21], lwd=lwd, lty=2)
-=======
+
 abline(v = 1.0, lwd=lwd, lty=2, col="blue")
-abline(h = lambda_vals[38], lwd=lwd, lty=2, col="blue")
+abline(h = lambda_vals[50], lwd=lwd, lty=2, col="blue")
 abline(v = 0.77, lwd=lwd, lty=2, col="green")
-#value of lambda where I2_vec/I2_vec[38] is closest to 38
-abline(h = lambda_vals[15], lwd=lwd, lty=2, col="green")
+#value of lambda where I2_vec/I2_vec[38] is closest to 0.77
+abline(h = lambda_vals[21], lwd=lwd, lty=2, col="green")
 text(x=0.1, y=0.018, "FOI 0.014", col="green", cex=font.size)
 text(x=0.1, y=0.041, "FOI 0.037", col="blue", cex=font.size)
->>>>>>> 9374e9a02a61d10a0cdece0382bcd2c3dd5c641b
 
 #* Calculating rho ---------------------------------------------------------
 
