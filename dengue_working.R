@@ -178,7 +178,15 @@ text(x=0.1, y=0.041, "FOI 0.037", col="blue", cex=font.size)
 
 #* Calculating rho ---------------------------------------------------------
 
+# nr cases = nr infections * detection prob
+# detection prob (rho) = nr cases/ nr infections
+# det prob = (100/10000) / (I2/1)
 rho <- (100/10000)/I2_vec[50]
+
+# when using both 1st and 2nd infections can lead to cases:
+# nr cases = (nr 1st inf * detection prob 1) + (nr 2nd inf * det prop 2)
+# should set a relationship between det prob 1 and 2 such that
+# nr cases = (nr 1st inf * detection prob 2 * relative severity) + (nr 2nd inf * det prop 2)
 
 # Calculating I1 and I2 in Gampaha ----------------------------------------
 
