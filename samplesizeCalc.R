@@ -271,8 +271,9 @@ run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015,
            treatment_effect = effectsizes[1], k = k_vec[2], 
            nr.percluster = 1000:3000) # 1681 per arm
 
-###############
-  # comparing impact of different k:
+
+#* comparing impact of different k: ----
+
 ## infection endpoint, k=0.15, effect size=0.3
 run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.091, 
            treatment_effect = effectsizes[2], k = k_vec[2], 
