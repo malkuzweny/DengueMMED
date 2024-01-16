@@ -200,6 +200,47 @@ prop.infection$maxAge <- maxAge
 
 plot(prop.infection$minAge, prop.infection$prop.infection)
 
+# age groups: use specific age groups 
+
+age.steps <- data.frame(minAge=rep(seq(from=4, to=40, by=4), each=10), 
+                        maxAge=rep(seq(from=8, to=44, by=4), times=10))
+age.steps <- subset(age.steps, maxAge > minAge)
+
+prop.infection <- data.frame(prop.infection=as.numeric(), 
+                             minAge=as.numeric(), 
+                             maxAge=as.numeric(),
+                             population=as.numeric())
+
+for (ii in 1:nrow(age.steps)) {
+  minAge <- age.steps$minAge[ii]
+  maxAge <- age.steps$maxAge[ii]
+  
+  ageRange <- minAge:maxAge
+  
+  # proportion of people experiencing infection
+  inf_c <- sum(AgeDist[ageRange]*
+                 rowSums(dengue_df.Gamp[length(years)-1,ageRange,c("I1","I2")]))/sum(AgeDist[ageRange])
+  inf_c_2yr <- 1-(1-inf_c)^2
+  
+  # number of people in this age group (total population size 2.5m)
+  population <- 2500000 * sum(AgeDist[minAge:maxAge])  
+  
+  output <- c(inf_c_2yr, minAge, maxAge, population)
+  output <- t(as.data.frame(output))
+  prop.infection <- rbind(prop.infection, output)
+}
+
+names(prop.infection) <- c("prop.infection", "minAge", "maxAge", "population")
+
+ggplot(data=prop.infection) +
+  geom_tile(aes(x=minAge, y=maxAge, fill=prop.infection)) +
+  scale_x_continuous(breaks = c(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44)) +
+  scale_y_continuous(breaks = c(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44)) +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(), #color = "gray", linetype = "dashed"),
+       panel.grid.minor = element_blank())
+  
+
 # * plot % infected by age at equilibrium ---------------------------------------------
 # use all infections (I1 to I3 or I4)
 # needs adapting to 3 serotype model

@@ -52,6 +52,35 @@ plot(x=prop.infection$minAge, y=prop.infection$prop.population, type="l", col="b
 
 # only people aged 20+ is about 4500 per arm -> 9000 in total. we had 4500 in report (with 4 serotypes, and fewer per cluster)
 
+# using pre-specified age groups
+
+cl.perarm.inf <- vector()
+
+for (ii in prop.infection$prop.infection) {
+  cl.perarm.inf.ii <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=ii, treatment_effect = 0.3, k=0.15, nr.percluster = 200)
+  cl.perarm.inf <- rbind(cl.perarm.inf, cl.perarm.inf.ii)
+}
+
+prop.infection$cl.perarm.inf <- cl.perarm.inf
+prop.infection$sampleSize.inf <- prop.infection$cl.perarm.inf * 200
+prop.infection$prop.population <- prop.infection$sampleSize.inf / prop.infection$population * 2 # *2 bc two arms
+# names(prop.infection) <- c("prop.infection", "minAge", "population", "maxAge", "clusters.perarm", "people.perarm", "prop.population")
+
+ggplot(data=prop.infection) +
+  geom_tile(aes(x=minAge, y=maxAge, fill=sampleSize.inf)) +
+  scale_x_continuous(breaks = c(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44)) +
+  scale_y_continuous(breaks = c(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44)) +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(), #color = "gray", linetype = "dashed"),
+        panel.grid.minor = element_blank())
+
+ggplot(data=prop.infection) +
+  geom_tile(aes(x=minAge, y=maxAge, fill=prop.population)) +
+  scale_x_continuous(breaks = c(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44)) +
+  scale_y_continuous(breaks = c(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44)) +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(), #color = "gray", linetype = "dashed"),
+        panel.grid.minor = element_blank())
 
 # plots for presentations -------------------------------------------------
 # infection
