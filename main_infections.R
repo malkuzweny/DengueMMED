@@ -238,7 +238,9 @@ ggplot(data=prop.infection) +
   scale_y_continuous(breaks = c(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44)) +
   theme_bw() +
   theme(panel.grid.major = element_blank(), #color = "gray", linetype = "dashed"),
-       panel.grid.minor = element_blank())
+       panel.grid.minor = element_blank()) +
+  scale_fill_gradient2(midpoint=0.065, low="blue", high="red", mid="white") +
+  labs(x='Minimum age', y="Maximum age", fill="Proportion experiencing \n1st or 2nd infection")
   
 
 # * plot % infected by age at equilibrium ---------------------------------------------
