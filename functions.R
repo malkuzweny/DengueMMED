@@ -1,7 +1,64 @@
 
 # Calculate no of infections by age and year ------------------------------------------------------
+infection_probs_4st <- function( lambda, max_age, P_D_mat, output.df, verbose=1 ){
+  if(verbose==1){browser()}
+  
+  for (y in 1:(length(years)-1)) {
+    
+    # infection probabilities
+    P_I0_I1 <- 1-(1 - lambda[y])^4
+    P_I1_I2 <- 1-(1 - lambda[y])^3
+    P_I2_I3 <- 1-(1 - lambda[y])^2
+    P_I3_I4 <- 1-(1 - lambda[y])^1
+    P_I4_I5 <- 0L
+    
+    # S4
+    output.df[y+1, 1:max_age + 1 , "S4"] <- output.df[y, 1:max_age, "S4"] * (1-P_I0_I1) # probability of individual staying susceptible
+    
+    # S3
+    output.df[y+1, 1:max_age + 1, "S3"] <- output.df[y, 1:max_age, "S4"] * (P_I0_I1) + # prob of people with first infection 
+      (output.df[y, 1:max_age, "S3"] * (1-P_I1_I2) ) # probability of not getting a second infection
+    
+    # I1 (reminder: first infections occur during this year) - that's why there's no +1's
+    output.df[y, 1:max_age, "I1"] <- output.df[y,1:max_age, "S4"] * (P_I0_I1)  # Number of new first infections
+    
+    # S2
+    output.df[y+1, 1:max_age+1, "S2"] <- output.df[y, 1:max_age, "S3"] * (P_I1_I2) + # prob of people with second infection 
+      output.df[y, 1:max_age, "S2"] * (1-P_I2_I3) # probability of not getting a third infection
+    
+    # I2
+    output.df[y, 1:max_age, "I2"] <- output.df[y, 1:max_age, "S3"] * (P_I1_I2)   # Number of new second infections
+    
+    # S1
+    output.df[y+1, 1:max_age+1, "S1"] <- output.df[y, 1:max_age, "S2"] * (P_I2_I3) + # prob of people with third infection 
+      (output.df[y, 1:max_age, "S1"] * (1-P_I3_I4) ) # probability of not getting a fourth infection
+    
+    #I3
+    output.df[y, 1:max_age, "I3"] <- output.df[y, 1:max_age, "S2"] * (P_I2_I3) # number of new third infections
+    
+    # S0
+    output.df[y+1, 1:max_age+1, "S0"] <- output.df[y, 1:max_age, "S1"] * (P_I3_I4) + # prob of people with fourth infection 
+      (output.df[y, 1:max_age, "S0"] * (1-P_I4_I5) ) # probability of not getting a fifth infection
+    
+    # I4
+    output.df[y, 1:max_age, "I4"] <- output.df[y, 1:max_age, "S1"] * (P_I3_I4) # number of new fourth infections
+    
+    #calculate the total population across susceptible statuses
+    output.df[y+1,1:max_age+1,"total"] <- rowSums(output.df[y+1,1:max_age+1,which(col_names %like% "S")])
+    
+    output.df[y,1:max_age,which(col_names %like% "D")] <- output.df[y,1:max_age,which(col_names %like% "I")]*
+      P_D_mat
+    
+  } # ends year loop
+  
+  #removing last year and last age group
+  output.df <- output.df[-length(years),,]
+  output.df <- output.df[,-(max_age+1),]
+  
+  return(output.df)
+}
 
-infection_probs <- function( lambda, max_age, P_D_mat, output.df, verbose=1 ){
+infection_probs_3st <- function( lambda, max_age, P_D_mat, output.df, verbose=1 ){
   if(verbose==1){browser()}
   
   for (y in 1:(length(years)-1)) {
@@ -56,7 +113,7 @@ infection_probs <- function( lambda, max_age, P_D_mat, output.df, verbose=1 ){
 
 # Sample size calculations ------------------------------------------------
 
-run.sscalc <- function(z_a2, z_b, pi_0, treatment_effect, k, nr.percluster) {
+run.sscalc <- function(z_a2, z_b=NULL, pi_0, treatment_effect, k, nr.percluster=NULL, clusters_perarm=NULL) {
   
   # pi_0 = proportion of population experiencing primary & second infection during trial at baseline
   # pi_a = proportion of population experiencing primary & second infection during trial in intervention group
@@ -64,13 +121,27 @@ run.sscalc <- function(z_a2, z_b, pi_0, treatment_effect, k, nr.percluster) {
   
   pi_a <- pi_0 * (1-treatment_effect)
   
-  clusters_perarm <- 2 + 
-    (z_a2 + z_b)^2 * 
-    ((pi_0 * (1-pi_0)/nr.percluster) + (pi_a * (1-pi_a)/nr.percluster) + k^2*(pi_0^2 + pi_a^2)) / (pi_0 - pi_a)^2 
+  if(is.null(z_b)){
+    z_b <- -z_a2 + sqrt(( (clusters_perarm-2) * (pi_0 - pi_a)^2 )/
+                          ((pi_0 * (1-pi_0)/nr.percluster) + (pi_a * (1-pi_a)/nr.percluster) + k^2*(pi_0^2 + pi_a^2)) )
+    
+    power <- pnorm(z_b)
+    return(power)
+  }
   
-  #clusters_perarm <- ceiling(clusters_perarm)
-  # print(clusters_perarm)
-  return(clusters_perarm)
+  if(is.null(clusters_perarm)){
+    clusters_perarm <- 2 + 
+      (z_a2 + z_b)^2 * 
+      ((pi_0 * (1-pi_0)/nr.percluster) + (pi_a * (1-pi_a)/nr.percluster) + k^2*(pi_0^2 + pi_a^2)) / (pi_0 - pi_a)^2 
+    return(clusters_perarm)
+  }
+  
+  if(is.null(nr.percluster)){
+    nr.percluster <- (pi_0*(1-pi_0) + pi_a*(1-pi_a))/
+      ((((clusters_perarm-2)*(pi_0-pi_a)^2)/(z_a2 + z_b)^2) - k^2*(pi_0^2 + pi_a^2))
+    return(nr.percluster)
+  }
+  
 }
 
 
