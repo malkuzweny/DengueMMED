@@ -51,18 +51,24 @@ barplot(as.matrix(cl_df), beside = TRUE, legend=rownames(cl_df),
         xlab = "scenario", ylab = "no. of pt per cluster")
 
 ##plot relative difference in sample size by FOI scenario
-cl_df$ll_perc <- cl_df$ll/cl_df$d
-cl_df$lh_perc <- cl_df$lh/cl_df$d
-cl_df$hd_perc <- cl_df$hd/cl_df$d
-cl_df$ld_perc <- cl_df$ld/cl_df$d
+cl_df$ll_fold <- cl_df$ll/cl_df$d
+cl_df$lh_fold <- cl_df$lh/cl_df$d
+cl_df$hd_fold <- cl_df$hd/cl_df$d
+cl_df$ld_fold <- cl_df$ld/cl_df$d
 
-barplot(as.matrix(cl_df[c("ll_perc", "lh_perc", "hd_perc", "ld_perc")]), 
+cl_df$ll_perc <- (cl_df$ll - cl_df$d)/cl_df$d
+cl_df$lh_perc <- (cl_df$lh - cl_df$d)/cl_df$d
+cl_df$hd_perc <- (cl_df$hd - cl_df$d)/cl_df$d
+cl_df$ld_perc <- (cl_df$ld - cl_df$d)/cl_df$d
+
+barplot(as.matrix(cl_df[c("ll_perc", "lh_perc", "hd_perc", "ld_perc")]),
+        ylim=c(-0.5, 1), 
         beside = TRUE, legend=rownames(cl_df),
         args.legend = list(x = "topright", bty="n"),
         names.arg=c("low/\nlow", "low/\nhigh",
                     "high/\nbaseline", "low/\nbaseline"),
         xlab = "scenario", ylab = "% change relative to baseline")
-
+abline(h=1,lty=2)
 
 
 
