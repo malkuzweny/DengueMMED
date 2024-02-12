@@ -258,7 +258,7 @@ inf_c_yr1_3st <- sum(AgeDist[ageRange]*
                        rowSums(dengue_df.Gamp_3st[length(years)-1,ageRange,c("I1","I2")]))/sum(AgeDist[ageRange])
 
 inf_c_yr2_4st <- sum(AgeDist[ageRange]*
-                       rowSums(dengue_df.Gamp_3to4st[2,ageRange,c("I1","I2")]))/sum(AgeDist[ageRange])
+                       rowSums(dengue_df.Gamp_3to4st[1,ageRange,c("I1","I2")]))/sum(AgeDist[ageRange])
 
 inf_c_2yr_3to4st <- inf_c_yr1_3st + inf_c_yr2_4st
 
@@ -329,13 +329,13 @@ inf_c_4st <- sum(AgeDist[ageRange]*
 inf_c_2yr_4st <- 1-(1-inf_c_4st)^2
 
 #3 serotype scenario cases
-
+case_c_2yr_3st <- rho*sum(AgeDist[1:60]*dengue_df.Gamp_3st[length(years)-1,1:60,"I2"])/sum(AgeDist[1:60])
 
 #3 to 4 serotype scenario cases
-
+case_c_2yr_3to4st <- rho*sum(AgeDist[1:60]*dengue_df.Gamp_3to4st[length(years)-1,1:60,"I2"])/sum(AgeDist[1:60])
 
 #4 serotype scenario cases
-
+case_c_2yr_4st <- rho*sum(AgeDist[1:60]*dengue_df.Gamp_2yr_4st[length(years)-1,1:60,"I2"])/sum(AgeDist[1:60])
 
 # plot # of pt needed by trial design for 3 st vs 4 st vs 4 st emerges ---------
 #clustered bar chart
