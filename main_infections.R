@@ -153,82 +153,115 @@ rho <- (100/10000)/I2_vec[50]
 
 # Only focus in I1 and I2
 
+#default FoI
 dengue_df.Gamp <- infection_probs(lambda = rep(lambda_vals[21], length(years)), 
                                   max_age = max_age, 
                                   P_D_mat = P_D_mat, 
                                   output.df = dengue,
                                   verbose = 0)
 
+dengue_df.Gamp_ll <- infection_probs(lambda = c(rep(lambda_vals[21], length(years)-3),
+                                                rep(lambda_vals[21]*0.5, 3)), 
+                                  max_age = max_age, 
+                                  P_D_mat = P_D_mat, 
+                                  output.df = dengue,
+                                  verbose = 0)
+
+dengue_df.Gamp_lh <- infection_probs(lambda = c(rep(lambda_vals[21], length(years)-3),
+                                                lambda_vals[21]*0.5,
+                                                lambda_vals[21]*2,
+                                                lambda_vals[21]), 
+                                     max_age = max_age, 
+                                     P_D_mat = P_D_mat, 
+                                     output.df = dengue,
+                                     verbose = 0)
+
+dengue_df.Gamp_hd <- infection_probs(lambda = c(rep(lambda_vals[21], length(years)-3),
+                                                lambda_vals[21]*2,
+                                                lambda_vals[21],
+                                                lambda_vals[21]), 
+                                     max_age = max_age, 
+                                     P_D_mat = P_D_mat, 
+                                     output.df = dengue,
+                                     verbose = 0)
+
+dengue_df.Gamp_ld <- infection_probs(lambda = c(rep(lambda_vals[21], length(years)-3),
+                                                lambda_vals[21]*0.5,
+                                                lambda_vals[21],
+                                                lambda_vals[21]), 
+                                     max_age = max_age, 
+                                     P_D_mat = P_D_mat, 
+                                     output.df = dengue,
+                                     verbose = 0)
+
 #proportion of population who experience primary or secondary infections per year
 ageRange <- 4:16
-inf_c <- sum(AgeDist[ageRange]*
-               rowSums(dengue_df.Gamp[length(years)-1,ageRange,c("I1","I2")]))/sum(AgeDist[ageRange])
+
+#calculate proportion of population who experience primary or secondary infection
+#for each FOI scenario
+inf_c_d <- sum(AgeDist[ageRange]*
+                 rowSums(dengue_df.Gamp[length(years)-1,ageRange,c("I1","I2")]))/sum(AgeDist[ageRange])
+
+inf_c_ll_y1 <- sum(AgeDist[ageRange]*
+                     rowSums(dengue_df.Gamp_ll[length(years)-2,ageRange,c("I1","I2")]))/sum(AgeDist[ageRange])
+inf_c_ll_y2 <- sum(AgeDist[ageRange]*
+                     rowSums(dengue_df.Gamp_ll[length(years)-1,ageRange,c("I1","I2")]))/sum(AgeDist[ageRange])
+
+inf_c_lh_y1 <- sum(AgeDist[ageRange]*
+                     rowSums(dengue_df.Gamp_lh[length(years)-2,ageRange,c("I1","I2")]))/sum(AgeDist[ageRange])
+inf_c_lh_y2 <- sum(AgeDist[ageRange]*
+                     rowSums(dengue_df.Gamp_lh[length(years)-1,ageRange,c("I1","I2")]))/sum(AgeDist[ageRange])
+
+inf_c_hd_y1 <- sum(AgeDist[ageRange]*
+                     rowSums(dengue_df.Gamp_hd[length(years)-2,ageRange,c("I1","I2")]))/sum(AgeDist[ageRange])
+inf_c_hd_y2 <- sum(AgeDist[ageRange]*
+                     rowSums(dengue_df.Gamp_hd[length(years)-1,ageRange,c("I1","I2")]))/sum(AgeDist[ageRange])
+
+inf_c_ld_y1 <- sum(AgeDist[ageRange]*
+                  rowSums(dengue_df.Gamp_ld[length(years)-2,ageRange,c("I1","I2")]))/sum(AgeDist[ageRange])
+inf_c_ld_y2 <- sum(AgeDist[ageRange]*
+                  rowSums(dengue_df.Gamp_ld[length(years)-1,ageRange,c("I1","I2")]))/sum(AgeDist[ageRange])
 
 # proportion of population who experience primary or secondary infections over a period of 2 years
-inf_c_2yr <- 1-(1-inf_c)^2
+inf_c_2yr_d <- 1-(1-inf_c_d)^2
+inf_c_2yr_ll <- inf_c_ll_y1 + inf_c_ll_y2
+inf_c_2yr_lh <- inf_c_lh_y1 + inf_c_lh_y2
+inf_c_2yr_hd <- inf_c_hd_y1 + inf_c_hd_y2
+inf_c_2yr_ld <- inf_c_ld_y1 + inf_c_ld_y2
 
 # proportion of population who shows up as case over a period of 2 years
-case_c_2yr <- 1-(1-(77/10000))^2
+#first calc secondary infections for each FoI scenario
+inf_c_ll_sec_y1 <- sum(AgeDist[ageRange]*
+                         (dengue_df.Gamp_ll[length(years)-2,ageRange,c("I2")]))/sum(AgeDist[ageRange])
+inf_c_ll_sec_y2 <- sum(AgeDist[ageRange]*
+                         (dengue_df.Gamp_ll[length(years)-1,ageRange,c("I2")]))/sum(AgeDist[ageRange])
+
+inf_c_lh_sec_y1 <- sum(AgeDist[ageRange]*
+                         (dengue_df.Gamp_lh[length(years)-2,ageRange,c("I2")]))/sum(AgeDist[ageRange])
+inf_c_lh_sec_y2 <- sum(AgeDist[ageRange]*
+                         (dengue_df.Gamp_lh[length(years)-1,ageRange,c("I2")]))/sum(AgeDist[ageRange])
+
+inf_c_hd_sec_y1 <- sum(AgeDist[ageRange]*
+                         (dengue_df.Gamp_hd[length(years)-2,ageRange,c("I2")]))/sum(AgeDist[ageRange])
+inf_c_hd_sec_y2 <- sum(AgeDist[ageRange]*
+                         (dengue_df.Gamp_hd[length(years)-1,ageRange,c("I2")]))/sum(AgeDist[ageRange])
+
+inf_c_ld_sec_y1 <- sum(AgeDist[ageRange]*
+                         (dengue_df.Gamp_ld[length(years)-2,ageRange,c("I2")]))/sum(AgeDist[ageRange])
+inf_c_ld_sec_y2 <- sum(AgeDist[ageRange]*
+                         (dengue_df.Gamp_ld[length(years)-1,ageRange,c("I2")]))/sum(AgeDist[ageRange])
+
+#then calc cases per year based on rho
+#for default scenario - just use data
+case_c_2yr_d <- 1-(1-(77/10000))^2
+case_c_2yr_ll <- rho*(inf_c_ll_sec_y1 + inf_c_ll_sec_y2)
+case_c_2yr_lh <- rho*(inf_c_lh_sec_y1 + inf_c_lh_sec_y2)
+case_c_2yr_hd <- rho*(inf_c_hd_sec_y1 + inf_c_hd_sec_y2)
+case_c_2yr_ld <- rho*(inf_c_ld_sec_y1 + inf_c_ld_sec_y2)
 
 
-# * for different age groups ----------------------------------------------
 
-# create dataframe of proportion of population experiencing 1st or 2nd infection for multiple age groups
-# age groups: varying minimum age to age 60
-prop.infection <- data.frame(prop.infection=as.numeric(), minAge=as.numeric(), population=as.numeric())
-minAge <- 1
-maxAge <- 60
 
-while (minAge < 40){
-  ageRange <- minAge:maxAge
-  
-  # proportion of people experiencing infection
-  inf_c <- sum(AgeDist[ageRange]*
-                 rowSums(dengue_df.Gamp[length(years)-1,ageRange,c("I1","I2")]))/sum(AgeDist[ageRange])
-  inf_c_2yr <- 1-(1-inf_c)^2
-  
-  # number of people in this age group (total population size 2.5m)
-  population <- 2500000 * sum(AgeDist[minAge:60])  
-  
-  output <- c(inf_c_2yr, minAge, population)
-  output <- t(as.data.frame(output))
-  prop.infection <- rbind(prop.infection, output)
-  minAge <- minAge+1
-}
-names(prop.infection) <- c("prop.infection", "minAge", "population")
-prop.infection$maxAge <- maxAge
-
-plot(prop.infection$minAge, prop.infection$prop.infection)
-
-# * plot % infected by age at equilibrium ---------------------------------------------
-# use all infections (I1 to I3 or I4)
-# needs adapting to 3 serotype model
-
-plotDF <- dengue_df.Gamp
-par(mar = c(5.1, 5.1, 4.1, 2.1))
-
-font.size <- 2
-lwd <- 4
-
-# par(mar = c(bottom, left, top, right)) , alue for mar is c(5.1, 4.1, 4.1, 2.1)  
-
-{
-  cols <- brewer.pal(4, "Set1")
-  
-  plot( x=1:(max_age), y = plotDF[100,,"I1" ], type = "l", col=cols[1], lwd=lwd,
-        ylim = c(0, 0.08), xlab="Age", ylab="% of population infected", cex.axis=font.size, cex.lab=font.size)
-  
-  lines( x = (1:max_age), y = plotDF[100,,"I2" ], col=cols[2], lwd=lwd)
-  lines( x = (1:max_age), y = plotDF[100,,"I3" ], col=cols[3], lwd=lwd)
-  # lines( x = (1:max_age), y = plotDF[100,,"I4" ], col=cols[4], lwd=lwd)
-  abline(v=4)
-  abline(v=16)
-  rect(xleft = 4, xright = 16, ybottom = par("usr")[3], ytop = par("usr")[4],
-       border = NA, col = adjustcolor("black", alpha = 0.3))
-  legend(x = c(25, 60), y = c(0.05, 0.08), legend=c("First infection", "Second infection", "Third infection", "Fourth infection"),
-         col=c(cols[1], cols[2], cols[3], cols[4]), lty=1, cex=font.size, bg="white", bty="n", lwd=lwd)
-  
-}
 
 
 
