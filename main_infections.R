@@ -168,7 +168,7 @@ inf_c_3st <- sum(AgeDist[ageRange]*
 inf_c_2yr_3st <- 1-(1-inf_c_3st)^2
 
 # proportion of population who shows up as case over a period of 2 years
-case_c_2yr <- 1-(1-(77/10000))^2
+case_c_2yr_3st <- 1-(1-(77/10000))^2
 
 # 4th serotype emerges, same FoI ----------
 #re-initialize new dataframe for 4th serotype introduction
@@ -328,26 +328,19 @@ inf_c_4st <- sum(AgeDist[ageRange]*
 # proportion of population who experience primary or secondary infections over a period of 2 years
 inf_c_2yr_4st <- 1-(1-inf_c_4st)^2
 
-#3 serotype scenario cases
-case_c_2yr_3st <- rho*sum(AgeDist[1:60]*dengue_df.Gamp_3st[length(years)-1,1:60,"I2"])/sum(AgeDist[1:60])
+# calculate number of cases based on secondary infections --------------
+#assuming same rho for scenario where 4th serotype emerges
+#3 serotype scenario cases - calc above
 
 #3 to 4 serotype scenario cases
-case_c_2yr_3to4st <- rho*sum(AgeDist[1:60]*dengue_df.Gamp_3to4st[length(years)-1,1:60,"I2"])/sum(AgeDist[1:60])
+case_c_3to4st_y1 <- rho*sum(AgeDist[1:60]*dengue_df.Gamp_3st[length(years)-1,1:60,"I2"])/sum(AgeDist[1:60])
+case_c_3to4st_y2 <- rho*sum(AgeDist[1:60]*dengue_df.Gamp_3to4st[1,1:60,"I2"])/sum(AgeDist[1:60])
+
+case_c_2yr_3to4st <- case_c_3to4st_y1 + case_c_3to4st_y2
 
 #4 serotype scenario cases
 case_c_2yr_4st <- rho*sum(AgeDist[1:60]*dengue_df.Gamp_2yr_4st[length(years)-1,1:60,"I2"])/sum(AgeDist[1:60])
-
-# plot # of pt needed by trial design for 3 st vs 4 st vs 4 st emerges ---------
-#clustered bar chart
-#relative power of each given baseline number of participants
-#think about assumptions - do we want to assume 3 serotypes circulating always? incl before trial? for 4 st scenario
-#scenarios -
-#assuming 3 serotypes co-circulating evenly (baseline)
-#assuming 4 serotypes co-circulating evenly (incl before trial)
-#assuming 3 serotypes co-circulating evenly --> during trial, 4th serotype introduced
-#two different figures -
-#number of pts needed per cluster for 80% power
-#power of each design given number of pts recruited for baseline scenario
+#not for 2 years ^^^
 
 
 
