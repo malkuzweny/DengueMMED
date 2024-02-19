@@ -187,15 +187,19 @@ while (minAge < 40){
                  rowSums(dengue_df.Gamp[length(years)-1,ageRange,c("I1","I2")]))/sum(AgeDist[ageRange])
   inf_c_2yr <- 1-(1-inf_c)^2
   
+  # proportion of people eligible for inclusion (i.e. in S3 or S2)
+  sus <- sum(AgeDist[ageRange]*
+                 rowSums(dengue_df.Gamp[length(years)-1,ageRange,c("S3","S2")]))/sum(AgeDist[ageRange])
+  
   # number of people in this age group (total population size 2.5m)
   population <- 2500000 * sum(AgeDist[minAge:60])  
   
-  output <- c(inf_c_2yr, minAge, population)
+  output <- c(inf_c_2yr, sus, minAge, population)
   output <- t(as.data.frame(output))
   prop.infection <- rbind(prop.infection, output)
   minAge <- minAge+1
 }
-names(prop.infection) <- c("prop.infection", "minAge", "population")
+names(prop.infection) <- c("prop.infection", "prop.sus", "minAge", "population")
 prop.infection$maxAge <- maxAge
 
 plot(prop.infection$minAge, prop.infection$prop.infection)
@@ -222,15 +226,20 @@ for (ii in 1:nrow(age.steps)) {
                  rowSums(dengue_df.Gamp[length(years)-1,ageRange,c("I1","I2")]))/sum(AgeDist[ageRange])
   inf_c_2yr <- 1-(1-inf_c)^2
   
-  # number of people in this age group (total population size 2.5m)
-  population <- 2500000 * sum(AgeDist[minAge:maxAge])  
+  # proportion of people eligible for inclusion (i.e. in S3 or S2)
+  sus <- sum(AgeDist[ageRange]*
+               rowSums(dengue_df.Gamp[length(years)-1,ageRange,c("S3","S2")]))/sum(AgeDist[ageRange])
   
-  output <- c(inf_c_2yr, minAge, maxAge, population)
+  # proportion & number of people in this age group (total population size 2.5m)
+  prop.population <- sum(AgeDist[minAge:maxAge])  
+  populationSize <- 2500000 * sum(AgeDist[minAge:maxAge])  
+  
+  output <- c(inf_c_2yr, sus, minAge, maxAge, prop.population, populationSize)
   output <- t(as.data.frame(output))
   prop.infection <- rbind(prop.infection, output)
 }
 
-names(prop.infection) <- c("prop.infection", "minAge", "maxAge", "population")
+names(prop.infection) <- c("prop.infection", "prop.sus", "minAge", "maxAge", "prop.population", "populationSize")
 
 ggplot(data=prop.infection) +
   geom_tile(aes(x=minAge, y=maxAge, fill=prop.infection)) +

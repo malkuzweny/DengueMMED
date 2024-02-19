@@ -22,6 +22,8 @@ k_vec <- c(0.02,0.15,0.25)
 
 # Different age groups ----------------------------------------------------
 
+# first run the age-specific calculations in main_infections.R to get the prop.infection dataframe
+
 # * Infection (active surv) -----------------------------------------------
 
 cl.perarm.inf <- vector()
@@ -62,8 +64,12 @@ for (ii in prop.infection$prop.infection) {
 }
 
 prop.infection$cl.perarm.inf <- cl.perarm.inf
-prop.infection$sampleSize.inf <- prop.infection$cl.perarm.inf * 200
-prop.infection$prop.population <- prop.infection$sampleSize.inf / prop.infection$population * 2 # *2 bc two arms
+prop.infection$sampleSize.inf <- prop.infection$cl.perarm.inf * 200 * 2 # *2 bc two arms
+prop.infection$prop.population.included <- prop.infection$sampleSize.inf / prop.infection$populationSize 
+prop.infection$eligible.perhh <- 3.7*prop.infection$prop.population*prop.infection$prop.sus
+
+prop.infection$no.households.percl <- 200 / prop.infection$eligible.perhh
+# prop.infection$no.households.percl <- ifelse(prop.infection$no.households.percl>200, 200, prop.infection$no.households.percl)
 # names(prop.infection) <- c("prop.infection", "minAge", "population", "maxAge", "clusters.perarm", "people.perarm", "prop.population")
 
 ggplot(data=prop.infection) +
@@ -78,12 +84,37 @@ ggplot(data=prop.infection) +
 
 
 ggplot(data=prop.infection) +
-  geom_tile(aes(x=minAge, y=maxAge, fill=prop.population)) +
+  geom_tile(aes(x=minAge, y=maxAge, fill=prop.population.included)) +
   scale_x_continuous(breaks = c(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44)) +
   scale_y_continuous(breaks = c(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44)) +
   theme_bw() +
   theme(panel.grid.major = element_blank(), #color = "gray", linetype = "dashed"),
-        panel.grid.minor = element_blank())
+        panel.grid.minor = element_blank()) +
+  scale_fill_gradient2(midpoint=mean(prop.infection$prop.population), low="blue", high="red", mid="white") +
+  labs(x='Minimum age', y="Maximum age", fill="% of eligible population \nincluded")
+
+ggplot(data=prop.infection) +
+  geom_tile(aes(x=minAge, y=maxAge, fill=no.households.percl)) +
+  scale_x_continuous(breaks = c(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44)) +
+  scale_y_continuous(breaks = c(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44)) +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(), #color = "gray", linetype = "dashed"),
+        panel.grid.minor = element_blank()) +
+  # scale_fill_gradient2(midpoint=mean(prop.infection$no.households.percl), low="blue", high="red", mid="white") +
+  scale_fill_gradient2(midpoint=800, low="blue", high="red", mid="white") +
+  labs(x='Minimum age', y="Maximum age", fill="No of houses \nscreened per cluster")
+
+ggplot(data=prop.infection) +
+  geom_tile(aes(x=minAge, y=maxAge, fill=eligible.perhh)) +
+  scale_x_continuous(breaks = c(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44)) +
+  scale_y_continuous(breaks = c(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44)) +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(), #color = "gray", linetype = "dashed"),
+        panel.grid.minor = element_blank()) +
+  scale_fill_gradient2(midpoint=mean(prop.infection$eligible.perhh), low="blue", high="red", mid="white") +
+  labs(x='Minimum age', y="Maximum age", fill="No of eligible persons per household")
+
+
 
 # plots for presentations -------------------------------------------------
 # infection
