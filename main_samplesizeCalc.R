@@ -3,6 +3,7 @@ rm(list=ls())
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 source('functions.R')
+source('main_infections.R')
 
 # Parameters --------------------------------------------------------------
 
@@ -16,7 +17,7 @@ cl.perarm.inf <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.094, treatment_effect = 
 cl.perarm.cases <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, treatment_effect = 0.3, k=0.15, nr.percluster = 20:200)
 
 effectsizes <- c(0.25,0.3,0.35)
-k_vec <- c(0.2,0.15,0.25)
+k_vec <- c(0.02,0.15,0.25)
 
 # plots for presentations -------------------------------------------------
 # infection
@@ -117,4 +118,59 @@ run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015,
 run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
            treatment_effect = effectsizes[2], k = k_vec[3], 
            nr.percluster = 1000:3000) # 1994 per arm (106% more)
+
+# sens and spec analysis ----------
+library(lattice)
+
+pi_0 <- inf_c_2yr
+
+#pi_0_adj <- pi_0*sens + (1-pi_0)*(1-sp)
+
+s_vals <- seq(0, 1, 0.05)
+s_df <- expand.grid(s_vals, s_vals)
+
+s_df$pi_0 <- pi_0
+
+names(s_df)[names(s_df) == "Var1"] <- "sens"
+names(s_df)[names(s_df) == "Var2"] <- "sp"
+
+s_df$app_pi_0 <- numeric(nrow(s_df))
+
+s_df$app_pi_0 <- (pi_0 * s_df$sens) + ((1-pi_0) * (1-s_df$sp))
+
+#calc sample size based on app_pi (ie observed pi)
+s_df$app_pi_nrpercl <- 
+  run.sscalc(z_a2=1.96, z_b=0.84, pi_0=s_df$app_pi_0, treatment_effect = 0.3, k=0.15, clusters_perarm=15)
+
+#calc sample size based on true pi
+truepi_nrpercl <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=pi_0, treatment_effect = 0.3, k=0.15, clusters_perarm=15)
+
+#relative difference between the two sample sizes
+s_df$nrpercl_fold <- (s_df$app_pi_nrpercl)/truepi_nrpercl
+
+#log10
+s_df$log10_nrpercl_fold <- log10(s_df$nrpercl_fold)
+
+levelplot(log10_nrpercl_fold ~ sens*sp, s_df, col.regions=terrain.colors(100))
+
+# levelplot(nrpercl_diff ~ sens*sp, s_df,
+#           at=c(-1,-0.5,0,1,2,5,10,15,25),
+#           colorkey=list((at=c(-1,-0.5,0,1,2,5,10,15,25)),
+#           labels=list(at=c(-1,-0.5,0,1,2,5,10,15,25))))
+
+pt.percl.inf <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.094, 
+                           treatment_effect = effectsizes[2], k = k_vec[2], 
+                           clusters_perarm=15)
+pt.percl.case <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
+                            treatment_effect = effectsizes[2], k = k_vec[2], 
+                            clusters_perarm=15)
+
+
+
+
+
+
+
+
+
 
