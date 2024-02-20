@@ -62,7 +62,7 @@ cl_df$hd_perc <- (cl_df$hd - cl_df$d)/cl_df$d
 cl_df$ld_perc <- (cl_df$ld - cl_df$d)/cl_df$d
 
 barplot(as.matrix(cl_df[c("ll_perc", "lh_perc", "hd_perc", "ld_perc")]),
-        ylim=c(-0.5, 1), 
+        ylim=c(-0.5, 1.1), 
         beside = TRUE, legend=rownames(cl_df),
         args.legend = list(x = "topright", bty="n"),
         names.arg=c("low/\nlow", "low/\nhigh",
@@ -104,8 +104,55 @@ barplot(as.matrix(cl_df[c("baseline_power", "ll_power", "lh_power", "hd_power", 
                     "High/\nbaseline", "Low/\nbaseline"),
         xlab = "Scenario", ylab = "Power")
 
+cl_df$ll_power_perc <- (cl_df$ll_power-cl_df$baseline_power)/cl_df$baseline_power
+cl_df$lh_power_perc <- (cl_df$lh_power-cl_df$baseline_power)/cl_df$baseline_power
+cl_df$hd_power_perc <- (cl_df$hd_power-cl_df$baseline_power)/cl_df$baseline_power
+cl_df$ld_power_perc <- (cl_df$ld_power-cl_df$baseline_power)/cl_df$baseline_power
 
+barplot(as.matrix(cl_df[c("ll_power_perc", "lh_power_perc", "hd_power_perc", "ld_power_perc")]),
+        ylim=c(-0.5,0.5), 
+        beside = TRUE, legend=rownames(cl_df),
+        args.legend = list(x = "topright", bty="n"),
+        names.arg=c("Low/\nlow", "Low/\nhigh",
+                    "High/\nbaseline", "Low/\nbaseline"),
+        xlab = "Scenario", ylab = "Power relative to baseline",
+        axes=F)
+labs <- seq(-0.5,1,0.25)
+axis(side=2, at=labs, labels=paste0(labs*100, "%"))
 
+{
+  ##need to fix legend plotting
+  layout(matrix(1:2, ncol=2, byrow=T))
+  
+  par(omi = c(0, 0, 0, 0.6),
+      xpd=T)
+  
+  barplot(as.matrix(cl_df[c("ll_perc", "lh_perc", "hd_perc", "ld_perc")]),
+          ylim=c(-0.5, 1.1), 
+          beside = TRUE,
+          names.arg=c("Low/\nlow", "Low/\nhigh",
+                      "High/\nbaseline", "Low/\nbaseline"),
+          xlab = "Scenario", ylab = "Participants per cluster relative to baseline",
+          axes=F)
+  labs <- seq(-0.5,1,0.25)
+  axis(side=2, at=labs, labels=paste0(labs*100, "%"))
+  
+  barplot(as.matrix(cl_df[c("ll_power_perc", "lh_power_perc", "hd_power_perc", "ld_power_perc")]),
+          ylim=c(-0.5,0.5),
+          beside = TRUE,
+          names.arg=c("Low/\nlow", "Low/\nhigh",
+                      "High/\nbaseline", "Low/\nbaseline"),
+          xlab = "Scenario", ylab = "Power relative to baseline",
+          axes=F, xpd=F)
+  labs <- seq(-0.5,1,0.25)
+  axis(side=2, at=labs, labels=paste0(labs*100, "%"), xpd=F)
+  
+  legend(par('usr')[2], par('usr')[4],
+         c("Active", "Passive"), title="Surveillance type",
+         col=grey.colors(2), pch=15,
+         bty="n", xpd=NA)
+  
+}
 
 
 
