@@ -24,7 +24,7 @@ k_vec <- c(0.02,0.15,0.25)
 
 # first run the age-specific calculations in main_infections.R to get the prop.infection dataframe
 
-# * Infection (active surv) -----------------------------------------------
+# * Minimum age only  -----------------------------------------------
 
 cl.perarm.inf <- vector()
 
@@ -54,8 +54,10 @@ plot(x=prop.infection$minAge, y=prop.infection$prop.population, type="l", col="b
 
 # only people aged 20+ is about 4500 per arm -> 9000 in total. we had 4500 in report (with 4 serotypes, and fewer per cluster)
 
-# using pre-specified age groups
 
+# * Specific age groups -----------------------------------------------------
+
+# calculate no clusters per arm assuming fixed cluster size
 cl.perarm.inf <- vector()
 
 for (ii in prop.infection$prop.infection) {
@@ -65,10 +67,26 @@ for (ii in prop.infection$prop.infection) {
 
 prop.infection$cl.perarm.inf <- cl.perarm.inf
 prop.infection$sampleSize.inf <- prop.infection$cl.perarm.inf * 200 * 2 # *2 bc two arms
+
+# calculate cluster size assuming fixed no of clusters
+clusterSize <- vector()
+clusters_perarm <- 15
+
+for (ii in prop.infection$prop.infection) {
+  clusterSize.ii <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=ii, treatment_effect = 0.3, k=0.15, clusters_perarm = clusters_perarm)
+  clusterSize <- rbind(clusterSize, clusterSize.ii)
+}
+
+prop.infection$clusterSize <- clusterSize
+prop.infection$sampleSize.inf <- prop.infection$clusterSize * clusters_perarm * 2 # *2 bc two arms
+
+
+
+# general calculations
 prop.infection$prop.population.included <- prop.infection$sampleSize.inf / prop.infection$populationSize 
 prop.infection$eligible.perhh <- 3.7*prop.infection$prop.population*prop.infection$prop.sus
 
-prop.infection$no.households.percl <- 200 / prop.infection$eligible.perhh
+prop.infection$no.households.percl <- prop.infection$clusterSize / prop.infection$eligible.perhh
 # prop.infection$no.households.percl <- ifelse(prop.infection$no.households.percl>200, 200, prop.infection$no.households.percl)
 # names(prop.infection) <- c("prop.infection", "minAge", "population", "maxAge", "clusters.perarm", "people.perarm", "prop.population")
 
@@ -94,14 +112,26 @@ ggplot(data=prop.infection) +
   labs(x='Minimum age', y="Maximum age", fill="% of eligible population \nincluded")
 
 ggplot(data=prop.infection) +
+  geom_tile(aes(x=minAge, y=maxAge, fill=clusterSize)) +
+  scale_x_continuous(breaks = c(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44)) +
+  scale_y_continuous(breaks = c(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44)) +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(), #color = "gray", linetype = "dashed"),
+        panel.grid.minor = element_blank()) +
+  scale_fill_gradient2(midpoint=mean(prop.infection$clusterSize), low="blue", high="red", mid="white") +
+  # scale_fill_gradient2(midpoint=800, low="blue", high="red", mid="white") +
+  labs(x='Minimum age', y="Maximum age", fill="Cluster size")
+
+
+ggplot(data=prop.infection) +
   geom_tile(aes(x=minAge, y=maxAge, fill=no.households.percl)) +
   scale_x_continuous(breaks = c(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44)) +
   scale_y_continuous(breaks = c(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44)) +
   theme_bw() +
   theme(panel.grid.major = element_blank(), #color = "gray", linetype = "dashed"),
         panel.grid.minor = element_blank()) +
-  # scale_fill_gradient2(midpoint=mean(prop.infection$no.households.percl), low="blue", high="red", mid="white") +
-  scale_fill_gradient2(midpoint=800, low="blue", high="red", mid="white") +
+  scale_fill_gradient2(midpoint=mean(prop.infection$no.households.percl), low="blue", high="red", mid="white") +
+  # scale_fill_gradient2(midpoint=800, low="blue", high="red", mid="white") +
   labs(x='Minimum age', y="Maximum age", fill="No of houses \nscreened per cluster")
 
 ggplot(data=prop.infection) +

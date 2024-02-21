@@ -56,7 +56,7 @@ infection_probs <- function( lambda, max_age, P_D_mat, output.df, verbose=1 ){
 
 # Sample size calculations ------------------------------------------------
 
-run.sscalc <- function(z_a2, z_b, pi_0, treatment_effect, k, nr.percluster) {
+run.sscalc <- function(z_a2, z_b=NULL, pi_0, treatment_effect, k, nr.percluster=NULL, clusters_perarm=NULL) {
   
   # pi_0 = proportion of population experiencing primary & second infection during trial at baseline
   # pi_a = proportion of population experiencing primary & second infection during trial in intervention group
@@ -64,16 +64,28 @@ run.sscalc <- function(z_a2, z_b, pi_0, treatment_effect, k, nr.percluster) {
   
   pi_a <- pi_0 * (1-treatment_effect)
   
-  clusters_perarm <- 2 + 
-    (z_a2 + z_b)^2 * 
-    ((pi_0 * (1-pi_0)/nr.percluster) + (pi_a * (1-pi_a)/nr.percluster) + k^2*(pi_0^2 + pi_a^2)) / (pi_0 - pi_a)^2 
+  if(is.null(z_b)){
+    z_b <- -z_a2 + sqrt(( (clusters_perarm-2) * (pi_0 - pi_a)^2 )/
+                          ((pi_0 * (1-pi_0)/nr.percluster) + (pi_a * (1-pi_a)/nr.percluster) + k^2*(pi_0^2 + pi_a^2)) )
+    
+    power <- pnorm(z_b)
+    return(power)
+  }
   
-  #clusters_perarm <- ceiling(clusters_perarm)
-  # print(clusters_perarm)
-  return(clusters_perarm)
+  if(is.null(clusters_perarm)){
+    clusters_perarm <- 2 + 
+      (z_a2 + z_b)^2 * 
+      ((pi_0 * (1-pi_0)/nr.percluster) + (pi_a * (1-pi_a)/nr.percluster) + k^2*(pi_0^2 + pi_a^2)) / (pi_0 - pi_a)^2 
+    return(clusters_perarm)
+  }
+  
+  if(is.null(nr.percluster)){
+    nr.percluster <- (pi_0*(1-pi_0) + pi_a*(1-pi_a))/
+      ((((clusters_perarm-2)*(pi_0-pi_a)^2)/(z_a2 + z_b)^2) - k^2*(pi_0^2 + pi_a^2))
+    return(nr.percluster)
+  }
+  
 }
-
-
 # * plots -----------------------------------------------------------------
 
 plot_sample_infections <- function(){
