@@ -24,8 +24,7 @@ cl.perarm.d_3to4st <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=case_c_2yr_3to4st, tr
 
 cl_df <- data.frame(row.names=c("active", "passive"),
                     first=c(cl.perarm.inf_3st, cl.perarm.d_3st),
-                    second=c(cl.perarm.inf_3to4st, cl.perarm.d_3to4st),
-                    third=c(cl.perarm.inf_4st, cl.perarm.d_4st))
+                    second=c(cl.perarm.inf_3to4st, cl.perarm.d_3to4st))
 #cl_df <- do.call(rbind, cl_df)
 barplot(as.matrix(cl_df[c("first", "second")]), beside = TRUE, ylim=c(0,1000),
         names.arg=c("3 serotypes\n(baseline)", "4th serotype emerges\nduring trial"),
@@ -35,10 +34,10 @@ barplot(as.matrix(cl_df[c("first", "second")]), beside = TRUE, ylim=c(0,1000),
 
 ##plot relative difference in sample size by scenario
 cl_df$second_fold <- cl_df$second/cl_df$first
-cl_df$third_fold <- cl_df$third/cl_df$first
+#cl_df$third_fold <- cl_df$third/cl_df$first
 
 cl_df$second_perc <- (cl_df$second-cl_df$first)/cl_df$first
-cl_df$third_perc <- (cl_df$third-cl_df$first)/cl_df$first
+#cl_df$third_perc <- (cl_df$third-cl_df$first)/cl_df$first
 
 barplot(as.matrix(cl_df[c("second_perc")]), 
         beside = TRUE,
@@ -86,8 +85,8 @@ barplot(as.matrix(cl_df[c("second_power_perc")]),
 axis(side = 2, at = seq(0, 0.08, 0.01), labels = paste0(seq(0, 0.08, 0.01)*100, "%"))
 
 #plot percentage difference
-tiff(filename = "~/Downloads/PerkinsLab/DengueTrial/st_emerge.tiff", 
-    width = 600, height = 300)
+# tiff(filename = "~/Downloads/PerkinsLab/DengueTrial/st_emerge.tiff", 
+#     width = 600, height = 300)
 
 {
   layout(matrix(1:2, ncol=2, byrow=T))
@@ -99,26 +98,24 @@ tiff(filename = "~/Downloads/PerkinsLab/DengueTrial/st_emerge.tiff",
           beside = TRUE,
           ylim=c(-0.2, 0.2),
           names.arg=c(""),
-          xlab = "", ylab = "% difference relative to baseline",
-          main="Participants per cluster",
+          xlab = "4th serotype emerges", ylab = "Participants per cluster relative to baseline",
           axes=F)
   axis(side = 2, at = seq(-0.2, 0.2, 0.1), labels = paste0(seq(-0.2, 0.2, 0.1)*100, "%"))
   
   barplot(as.matrix(cl_df[c("second_power_perc")]), 
           beside = TRUE,
           names.arg=c(""),
-          xlab = "", ylab = "% difference relative to baseline",
-          main="Power",
+          xlab = "4th serotype emerges", ylab = "Power relative to baseline",
           axes=F)
   axis(side = 2, at = seq(0, 0.08, 0.01), labels = paste0(seq(0, 0.08, 0.01)*100, "%"))
   
-  legend("topright", inset = c(-0.9, 0), 
-         legend=c("Active", "Passive"),
-         pch=c(15,15), title="Surveillance type",
-         col=grey.colors(2),
-         bty="n", xpd=NA)
+  # legend("topright", inset = c(-0.9, 0), 
+  #        legend=c("Active", "Passive"),
+  #        pch=c(15,15), title="Surveillance type",
+  #        col=grey.colors(2),
+  #        bty="n", xpd=NA)
   
-  mtext("Fourth serotype emerges during trial", side=3, line=-1.5, outer=T, cex=1.5, font=2)
+  #mtext("Fourth serotype emerges during trial", side=3, line=-1.5, outer=T, cex=1.5, font=2)
 }
 
 dev.off()
