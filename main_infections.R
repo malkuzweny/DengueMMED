@@ -164,6 +164,12 @@ ageRange <- 4:16
 inf_c <- sum(AgeDist[ageRange]*
                rowSums(dengue_df.Gamp[length(years)-1,ageRange,c("I1","I2")]))/sum(AgeDist[ageRange])
 
+inf_pr <- sum(AgeDist[ageRange]*
+                (dengue_df.Gamp[length(years)-1,ageRange,c("I1")]))/sum(AgeDist[ageRange])
+
+inf_sec <- sum(AgeDist[ageRange]*
+                 (dengue_df.Gamp[length(years)-1,ageRange,c("I2")]))/sum(AgeDist[ageRange])
+
 # proportion of population who experience primary or secondary infections over a period of 2 years
 inf_c_2yr <- 1-(1-inf_c)^2
 
