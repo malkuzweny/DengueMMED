@@ -361,7 +361,7 @@ update(full_plot,
 pi_0_inf_pr <- inf_pr
 pi_0_inf_sec <- inf_sec
 
-s_vals <- seq(0.5, 1, 0.05)
+s_vals <- seq(0.7, 1, 0.05)
 s_df <- expand.grid(s_vals, s_vals)
 
 s_df$pi_0_inf_pr <- pi_0_inf_pr
@@ -370,33 +370,33 @@ s_df$pi_0_inf_sec <- pi_0_inf_sec
 names(s_df)[names(s_df) == "Var1"] <- "sens_sec"
 names(s_df)[names(s_df) == "Var2"] <- "sp_sec"
 
-s_df$sens_pr_50 <- 0.5
-s_df$sp_pr_50 <- 0.5
+s_df$sens_pr_70 <- 0.7
+s_df$sp_pr_70 <- 0.7
 
-s_df$sens_pr_75 <- 0.75
-s_df$sp_pr_75 <- 0.75
+s_df$sens_pr_85 <- 0.85
+s_df$sp_pr_85 <- 0.85
 
 s_df$sens_pr_100 <- 1
 s_df$sp_pr_100 <- 1
 
-#sn = 50, sp = 50
-s_df$app_pi_0_pr_1 <- (pi_0_inf_pr * s_df$sens_pr_50) + ((1-pi_0_inf_pr) * (1-s_df$sp_pr_50))
-#sn = 50, sp = 75
-s_df$app_pi_0_pr_2 <- (pi_0_inf_pr * s_df$sens_pr_50) + ((1-pi_0_inf_pr) * (1-s_df$sp_pr_75))
-#sn = 50, sp = 100
-s_df$app_pi_0_pr_3 <- (pi_0_inf_pr * s_df$sens_pr_50) + ((1-pi_0_inf_pr) * (1-s_df$sp_pr_100))
+#sn = 70, sp = 50
+s_df$app_pi_0_pr_1 <- (pi_0_inf_pr * s_df$sens_pr_70) + ((1-pi_0_inf_pr) * (1-s_df$sp_pr_70))
+#sn = 70, sp = 85
+s_df$app_pi_0_pr_2 <- (pi_0_inf_pr * s_df$sens_pr_70) + ((1-pi_0_inf_pr) * (1-s_df$sp_pr_85))
+#sn = 70, sp = 100
+s_df$app_pi_0_pr_3 <- (pi_0_inf_pr * s_df$sens_pr_70) + ((1-pi_0_inf_pr) * (1-s_df$sp_pr_100))
 
-#sn = 75, sp = 50
-s_df$app_pi_0_pr_4 <- (pi_0_inf_pr * s_df$sens_pr_75) + ((1-pi_0_inf_pr) * (1-s_df$sp_pr_50))
-#sn = 75, sp = 75
-s_df$app_pi_0_pr_5 <- (pi_0_inf_pr * s_df$sens_pr_75) + ((1-pi_0_inf_pr) * (1-s_df$sp_pr_75))
-#sn = 75, sp = 100
-s_df$app_pi_0_pr_6 <- (pi_0_inf_pr * s_df$sens_pr_75) + ((1-pi_0_inf_pr) * (1-s_df$sp_pr_100))
+#sn = 85, sp = 50
+s_df$app_pi_0_pr_4 <- (pi_0_inf_pr * s_df$sens_pr_85) + ((1-pi_0_inf_pr) * (1-s_df$sp_pr_70))
+#sn = 85, sp = 75
+s_df$app_pi_0_pr_5 <- (pi_0_inf_pr * s_df$sens_pr_85) + ((1-pi_0_inf_pr) * (1-s_df$sp_pr_85))
+#sn = 85, sp = 100
+s_df$app_pi_0_pr_6 <- (pi_0_inf_pr * s_df$sens_pr_85) + ((1-pi_0_inf_pr) * (1-s_df$sp_pr_100))
 
-#sn = 100, sp = 50
-s_df$app_pi_0_pr_7 <- (pi_0_inf_pr * s_df$sens_pr_100) + ((1-pi_0_inf_pr) * (1-s_df$sp_pr_50))
-#sn = 100, sp = 75
-s_df$app_pi_0_pr_8 <- (pi_0_inf_pr * s_df$sens_pr_100) + ((1-pi_0_inf_pr) * (1-s_df$sp_pr_75))
+#sn = 100, sp = 70
+s_df$app_pi_0_pr_7 <- (pi_0_inf_pr * s_df$sens_pr_100) + ((1-pi_0_inf_pr) * (1-s_df$sp_pr_70))
+#sn = 100, sp = 85
+s_df$app_pi_0_pr_8 <- (pi_0_inf_pr * s_df$sens_pr_100) + ((1-pi_0_inf_pr) * (1-s_df$sp_pr_85))
 #sn = 100, sp = 100
 s_df$app_pi_0_pr_9 <- (pi_0_inf_pr * s_df$sens_pr_100) + ((1-pi_0_inf_pr) * (1-s_df$sp_pr_100))
 
@@ -443,106 +443,125 @@ s_df$app_pi_nrpercl_9 <-
   run.sscalc(z_a2=1.96, z_b=0.84, pi_0=s_df$app_pi_0_9_total_2yr, treatment_effect = 0.3, k=0.15, clusters_perarm=15)
 
 #calc power with sample size based on observed incidence (ie app_pi) given true incidence
+s_df$app_power_1 <- 
+  run.sscalc(z_a2=1.96, z_b=NULL, pi_0=inf_c_2yr, nr.percluster=s_df$app_pi_nrpercl_1, treatment_effect = 0.3, k=0.15, clusters_perarm=15)
+s_df$app_power_2 <- 
+  run.sscalc(z_a2=1.96, z_b=NULL, pi_0=inf_c_2yr, nr.percluster=s_df$app_pi_nrpercl_2, treatment_effect = 0.3, k=0.15, clusters_perarm=15)
+s_df$app_power_3 <- 
+  run.sscalc(z_a2=1.96, z_b=NULL, pi_0=inf_c_2yr, nr.percluster=s_df$app_pi_nrpercl_3, treatment_effect = 0.3, k=0.15, clusters_perarm=15)
+s_df$app_power_4 <- 
+  run.sscalc(z_a2=1.96, z_b=NULL, pi_0=inf_c_2yr, nr.percluster=s_df$app_pi_nrpercl_4, treatment_effect = 0.3, k=0.15, clusters_perarm=15)
+s_df$app_power_5 <- 
+  run.sscalc(z_a2=1.96, z_b=NULL, pi_0=inf_c_2yr, nr.percluster=s_df$app_pi_nrpercl_5, treatment_effect = 0.3, k=0.15, clusters_perarm=15)
+s_df$app_power_6 <- 
+  run.sscalc(z_a2=1.96, z_b=NULL, pi_0=inf_c_2yr, nr.percluster=s_df$app_pi_nrpercl_6, treatment_effect = 0.3, k=0.15, clusters_perarm=15)
+s_df$app_power_7 <- 
+  run.sscalc(z_a2=1.96, z_b=NULL, pi_0=inf_c_2yr, nr.percluster=s_df$app_pi_nrpercl_7, treatment_effect = 0.3, k=0.15, clusters_perarm=15)
+s_df$app_power_8 <- 
+  run.sscalc(z_a2=1.96, z_b=NULL, pi_0=inf_c_2yr, nr.percluster=s_df$app_pi_nrpercl_8, treatment_effect = 0.3, k=0.15, clusters_perarm=15)
+s_df$app_power_9 <- 
+  run.sscalc(z_a2=1.96, z_b=NULL, pi_0=inf_c_2yr, nr.percluster=s_df$app_pi_nrpercl_9, treatment_effect = 0.3, k=0.15, clusters_perarm=15)
+
 
 #calc sample size based on true pi
-truepi_nrpercl <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=inf_c_2yr, treatment_effect = 0.3, k=0.15, clusters_perarm=15)
+#truepi_nrpercl <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=inf_c_2yr, treatment_effect = 0.3, k=0.15, clusters_perarm=15)
 
 #relative difference between the two sample sizes
-s_df$nrpercl_fold <- (s_df$app_pi_nrpercl)/truepi_nrpercl
+#s_df$nrpercl_fold <- (s_df$app_pi_nrpercl)/truepi_nrpercl
 
 #log10
-s_df$log10_nrpercl_fold <- log10(s_df$nrpercl_fold)
+#s_df$log10_nrpercl_fold <- log10(s_df$nrpercl_fold)
 
-levelplot(log10_nrpercl_fold ~ sens*sp, s_df, col.regions=terrain.colors(100))
+#levelplot(log10_nrpercl_fold ~ sens*sp, s_df, col.regions=terrain.colors(100))
 
 #layout(matrix(c(3,6,9,2,5,8,1,4,7), nrow=3, byrow=T))
 
 #x axis = sn, y axis = sp
-plot1 <- levelplot(log10(app_pi_nrpercl_1/truepi_nrpercl) ~ sens_sec*sp_sec, s_df, 
+plot1 <- levelplot(app_power_1 ~ sens_sec*sp_sec, s_df, 
                    cuts=10,
-                   at=seq(-2,0.5,by=0.25),
-                   colorkey=list((at=seq(-2,0.5,by=0.25)),
-                                 labels=list(at=seq(-2,0.5,by=0.25))),
+                   at=seq(0,1,by=0.1),
+                   colorkey=list((at=seq(0,1,by=0.1)),
+                                 labels=list(at=seq(0,1,by=0.1))),
                    col.regions=c("#9E0142","#D53E4F","#F46D43","#FDAE61",
                                  "#FEE08B","#FFFFBF","#E6F598","#ABDDA4",
                                  "#66C2A5","#48a36c","#5E4FA2"),
-                   xlab=c("50%"), ylab=c("50%"))
+                   xlab=c("70%"), ylab=c("70%"))
 
-plot2 <- levelplot(log10(app_pi_nrpercl_2/truepi_nrpercl) ~ sens_sec*sp_sec, s_df, 
+plot2 <- levelplot(app_power_2 ~ sens_sec*sp_sec, s_df, 
                    cuts=10,
-                   at=seq(-2,0.5,by=0.25),
-                   colorkey=list((at=seq(-2,0.5,by=0.25)),
-                                 labels=list(at=seq(-2,0.5,by=0.25))),
+                   at=seq(0,1,by=0.1),
+                   colorkey=list((at=seq(0,1,by=0.1)),
+                                 labels=list(at=seq(0,1,by=0.1))),
                    col.regions=c("#9E0142","#D53E4F","#F46D43","#FDAE61",
                                  "#FEE08B","#FFFFBF","#E6F598","#ABDDA4",
                                  "#66C2A5","#48a36c","#5E4FA2"),
-                   xlab=c("50%"), ylab=c("75%"))
+                   xlab=c("70%"), ylab=c("85%"))
 
-plot3 <- levelplot(log10(app_pi_nrpercl_3/truepi_nrpercl) ~ sens_sec*sp_sec, s_df, 
+plot3 <- levelplot(app_power_3 ~ sens_sec*sp_sec, s_df, 
                    cuts=10,
-                   at=seq(-2,0.5,by=0.25),
-                   colorkey=list((at=seq(-2,0.5,by=0.25)),
-                                 labels=list(at=seq(-2,0.5,by=0.25))),
+                   at=seq(0,1,by=0.1),
+                   colorkey=list((at=seq(0,1,by=0.1)),
+                                 labels=list(at=seq(0,1,by=0.1))),
                    col.regions=c("#9E0142","#D53E4F","#F46D43","#FDAE61",
                                  "#FEE08B","#FFFFBF","#E6F598","#ABDDA4",
                                  "#66C2A5","#48a36c","#5E4FA2"),
-                   xlab=c("50%"), ylab=c("100%"))
+                   xlab=c("70%"), ylab=c("100%"))
 
-plot4 <- levelplot(log10(app_pi_nrpercl_4/truepi_nrpercl) ~ sens_sec*sp_sec, s_df, 
+plot4 <- levelplot(app_power_4 ~ sens_sec*sp_sec, s_df, 
                    cuts=10,
-                   at=seq(-2,0.5,by=0.25),
-                   colorkey=list((at=seq(-2,0.5,by=0.25)),
-                                 labels=list(at=seq(-2,0.5,by=0.25))),
+                   at=seq(0,1,by=0.1),
+                   colorkey=list((at=seq(0,1,by=0.1)),
+                                 labels=list(at=seq(0,1,by=0.1))),
                    col.regions=c("#9E0142","#D53E4F","#F46D43","#FDAE61",
                                  "#FEE08B","#FFFFBF","#E6F598","#ABDDA4",
                                  "#66C2A5","#48a36c","#5E4FA2"),
-                   xlab=c("75%"), ylab=c("50%"))
+                   xlab=c("85%"), ylab=c("70%"))
 
-plot5 <- levelplot(log10(app_pi_nrpercl_5/truepi_nrpercl) ~ sens_sec*sp_sec, s_df, 
+plot5 <- levelplot(app_power_5 ~ sens_sec*sp_sec, s_df, 
                    cuts=10,
-                   at=seq(-2,0.5,by=0.25),
-                   colorkey=list((at=seq(-2,0.5,by=0.25)),
-                                 labels=list(at=seq(-2,0.5,by=0.25))),
+                   at=seq(0,1,by=0.1),
+                   colorkey=list((at=seq(0,1,by=0.1)),
+                                 labels=list(at=seq(0,1,by=0.1))),
                    col.regions=c("#9E0142","#D53E4F","#F46D43","#FDAE61",
                                  "#FEE08B","#FFFFBF","#E6F598","#ABDDA4",
                                  "#66C2A5","#48a36c","#5E4FA2"),
-                   xlab=c("75%"), ylab=c("75%"))
+                   xlab=c("85%"), ylab=c("85%"))
 
-plot6 <- levelplot(log10(app_pi_nrpercl_6/truepi_nrpercl) ~ sens_sec*sp_sec, s_df, 
+plot6 <- levelplot(app_power_6 ~ sens_sec*sp_sec, s_df,
                    cuts=10,
-                   at=seq(-2,0.5,by=0.25),
-                   colorkey=list((at=seq(-2,0.5,by=0.25)),
-                                 labels=list(at=seq(-2,0.5,by=0.25))),
+                   at=seq(0,1,by=0.1),
+                   colorkey=list((at=seq(0,1,by=0.1)),
+                                 labels=list(at=seq(0,1,by=0.1))),
                    col.regions=c("#9E0142","#D53E4F","#F46D43","#FDAE61",
                                  "#FEE08B","#FFFFBF","#E6F598","#ABDDA4",
                                  "#66C2A5","#48a36c","#5E4FA2"),
-                   xlab=c("75%"), ylab=c("100%"))
+                   xlab=c("85%"), ylab=c("100%"))
 
-plot7 <- levelplot(log10(app_pi_nrpercl_7/truepi_nrpercl) ~ sens_sec*sp_sec, s_df, 
+plot7 <- levelplot(app_power_7 ~ sens_sec*sp_sec, s_df, 
                    cuts=10,
-                   at=seq(-2,0.5,by=0.25),
-                   colorkey=list((at=seq(-2,0.5,by=0.25)),
-                                 labels=list(at=seq(-2,0.5,by=0.25))),
+                   at=seq(0,1,by=0.1),
+                   colorkey=list((at=seq(0,1,by=0.1)),
+                                 labels=list(at=seq(0,1,by=0.1))),
                    col.regions=c("#9E0142","#D53E4F","#F46D43","#FDAE61",
                                  "#FEE08B","#FFFFBF","#E6F598","#ABDDA4",
                                  "#66C2A5","#48a36c","#5E4FA2"),
-                   xlab=c("100%"), ylab=c("50%"))
+                   xlab=c("100%"), ylab=c("70%"))
 
-plot8 <- levelplot(log10(app_pi_nrpercl_8/truepi_nrpercl) ~ sens_sec*sp_sec, s_df, 
+plot8 <- levelplot(app_power_8 ~ sens_sec*sp_sec, s_df, 
                    cuts=10,
-                   at=seq(-2,0.5,by=0.25),
-                   colorkey=list((at=seq(-2,0.5,by=0.25)),
-                                 labels=list(at=seq(-2,0.5,by=0.25))),
+                   at=seq(0,1,by=0.1),
+                   colorkey=list((at=seq(0,1,by=0.1)),
+                                 labels=list(at=seq(0,1,by=0.1))),
                    col.regions=c("#9E0142","#D53E4F","#F46D43","#FDAE61",
                                  "#FEE08B","#FFFFBF","#E6F598","#ABDDA4",
                                  "#66C2A5","#48a36c","#5E4FA2"),
-                   xlab=c("100%"), ylab=c("75%"))
+                   xlab=c("100%"), ylab=c("85%"))
 
-plot9 <- levelplot(log10(app_pi_nrpercl_9/truepi_nrpercl) ~ sens_sec*sp_sec, s_df, 
+plot9 <- levelplot(app_power_9 ~ sens_sec*sp_sec, s_df, 
                    cuts=10,
-                   at=seq(-2,0.5,by=0.25),
-                   colorkey=list((at=seq(-2,0.5,by=0.25)),
-                                 labels=list(at=seq(-2,0.5,by=0.25))),
+                   at=seq(0,1,by=0.1),
+                   colorkey=list((at=seq(0,1,by=0.1)),
+                                 labels=list(at=seq(0,1,by=0.1))),
                    col.regions=c("#9E0142","#D53E4F","#F46D43","#FDAE61",
                                  "#FEE08B","#FFFFBF","#E6F598","#ABDDA4",
                                  "#66C2A5","#48a36c","#5E4FA2"),
@@ -553,16 +572,24 @@ full_plot <- c(plot1, plot4, plot7, plot2, plot5, plot8, plot3, plot6, plot9,
 
 update(full_plot, 
        xlab="Sensitivity (secondary)\n
-       50%                        75%                        100%\n
+       70%                        85%                        100%\n
        Sensitivity (primary)", 
        ylab="Specificity (primary)\n
-       50%                        75%                        100%\n
+       70%                        85%                        100%\n
        Specificity (secondary)")
 #save as 650x600
 
 
 
-
+# plot1 <- levelplot(app_power_1 ~ sens_sec*sp_sec, s_df, 
+#                    cuts=10,
+#                    at=seq(-2,0.5,by=0.25),
+#                    colorkey=list((at=seq(-2,0.5,by=0.25)),
+#                                  labels=list(at=seq(-2,0.5,by=0.25))),
+#                    col.regions=c("#9E0142","#D53E4F","#F46D43","#FDAE61",
+#                                  "#FEE08B","#FFFFBF","#E6F598","#ABDDA4",
+#                                  "#66C2A5","#48a36c","#5E4FA2"),
+#                    xlab=c("70%"), ylab=c("70%"))
 
 
 
