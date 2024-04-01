@@ -179,62 +179,62 @@ case_c_2yr <- 1-(1-(77/10000))^2
 
 # * for different age groups ----------------------------------------------
 
-# create dataframe of proportion of population experiencing 1st or 2nd infection for multiple age groups
-# age groups: varying minimum age to age 60
-prop.infection <- data.frame(prop.infection=as.numeric(), minAge=as.numeric(), population=as.numeric())
-minAge <- 1
-maxAge <- 60
-
-while (minAge < 40){
-  ageRange <- minAge:maxAge
-  
-  # proportion of people experiencing infection
-  inf_c <- sum(AgeDist[ageRange]*
-                 rowSums(dengue_df.Gamp[length(years)-1,ageRange,c("I1","I2")]))/sum(AgeDist[ageRange])
-  inf_c_2yr <- 1-(1-inf_c)^2
-  
-  # number of people in this age group (total population size 2.5m)
-  population <- 2500000 * sum(AgeDist[minAge:60])  
-  
-  output <- c(inf_c_2yr, minAge, population)
-  output <- t(as.data.frame(output))
-  prop.infection <- rbind(prop.infection, output)
-  minAge <- minAge+1
-}
-names(prop.infection) <- c("prop.infection", "minAge", "population")
-prop.infection$maxAge <- maxAge
-
-plot(prop.infection$minAge, prop.infection$prop.infection)
-
-# * plot % infected by age at equilibrium ---------------------------------------------
-# use all infections (I1 to I3 or I4)
-# needs adapting to 3 serotype model
-
-plotDF <- dengue_df.Gamp
-par(mar = c(5.1, 5.1, 4.1, 2.1))
-
-font.size <- 1.3
-lwd <- 4
-
-# par(mar = c(bottom, left, top, right)) , alue for mar is c(5.1, 4.1, 4.1, 2.1)  
-
-{
-  cols <- brewer.pal(4, "Set1")
-  
-  plot( x=1:(max_age), y = plotDF[100,,"I1" ], type = "l", col=cols[1], lwd=lwd,
-        ylim = c(0, 0.06), xlab="Age", ylab="% of population infected", cex.axis=font.size, cex.lab=font.size)
-  
-  lines( x = (1:max_age), y = plotDF[100,,"I2" ], col=cols[2], lwd=lwd)
-  lines( x = (1:max_age), y = plotDF[100,,"I3" ], col=cols[3], lwd=lwd)
-  # lines( x = (1:max_age), y = plotDF[100,,"I4" ], col=cols[4], lwd=lwd)
-  abline(v=4)
-  abline(v=16)
-  rect(xleft = 4, xright = 16, ybottom = par("usr")[3], ytop = par("usr")[4],
-       border = NA, col = adjustcolor("black", alpha = 0.3))
-  legend(x = c(20, 55), y = c(0.03, 0.06), legend=c("First infection", "Second infection", "Third infection"),
-         col=c(cols[1], cols[2], cols[3]), lty=1, cex=font.size, bg="white", bty="n", lwd=lwd)
-  
-}
-
-
-
+# # create dataframe of proportion of population experiencing 1st or 2nd infection for multiple age groups
+# # age groups: varying minimum age to age 60
+# prop.infection <- data.frame(prop.infection=as.numeric(), minAge=as.numeric(), population=as.numeric())
+# minAge <- 1
+# maxAge <- 60
+# 
+# while (minAge < 40){
+#   ageRange <- minAge:maxAge
+#   
+#   # proportion of people experiencing infection
+#   inf_c <- sum(AgeDist[ageRange]*
+#                  rowSums(dengue_df.Gamp[length(years)-1,ageRange,c("I1","I2")]))/sum(AgeDist[ageRange])
+#   inf_c_2yr <- 1-(1-inf_c)^2
+#   
+#   # number of people in this age group (total population size 2.5m)
+#   population <- 2500000 * sum(AgeDist[minAge:60])  
+#   
+#   output <- c(inf_c_2yr, minAge, population)
+#   output <- t(as.data.frame(output))
+#   prop.infection <- rbind(prop.infection, output)
+#   minAge <- minAge+1
+# }
+# names(prop.infection) <- c("prop.infection", "minAge", "population")
+# prop.infection$maxAge <- maxAge
+# 
+# plot(prop.infection$minAge, prop.infection$prop.infection)
+# 
+# # * plot % infected by age at equilibrium ---------------------------------------------
+# # use all infections (I1 to I3 or I4)
+# # needs adapting to 3 serotype model
+# 
+# plotDF <- dengue_df.Gamp
+# par(mar = c(5.1, 5.1, 4.1, 2.1))
+# 
+# font.size <- 1.3
+# lwd <- 4
+# 
+# # par(mar = c(bottom, left, top, right)) , alue for mar is c(5.1, 4.1, 4.1, 2.1)  
+# 
+# {
+#   cols <- brewer.pal(4, "Set1")
+#   
+#   plot( x=1:(max_age), y = plotDF[100,,"I1" ], type = "l", col=cols[1], lwd=lwd,
+#         ylim = c(0, 0.06), xlab="Age", ylab="% of population infected", cex.axis=font.size, cex.lab=font.size)
+#   
+#   lines( x = (1:max_age), y = plotDF[100,,"I2" ], col=cols[2], lwd=lwd)
+#   lines( x = (1:max_age), y = plotDF[100,,"I3" ], col=cols[3], lwd=lwd)
+#   # lines( x = (1:max_age), y = plotDF[100,,"I4" ], col=cols[4], lwd=lwd)
+#   abline(v=4)
+#   abline(v=16)
+#   rect(xleft = 4, xright = 16, ybottom = par("usr")[3], ytop = par("usr")[4],
+#        border = NA, col = adjustcolor("black", alpha = 0.3))
+#   legend(x = c(20, 55), y = c(0.03, 0.06), legend=c("First infection", "Second infection", "Third infection"),
+#          col=c(cols[1], cols[2], cols[3]), lty=1, cex=font.size, bg="white", bty="n", lwd=lwd)
+#   
+# }
+# 
+# 
+# 
