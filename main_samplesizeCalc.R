@@ -30,6 +30,28 @@ cl.perarm.case_k2_e2 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015,
                                   treatment_effect = effectsizes[2], k = k_vec[2], 
                                   nr.percluster = 20:2000)
 
+##active surveillance
+run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.094, 
+           treatment_effect = 0.35, k = 0.15, 
+           nr.percluster = 20:300)
+#for e=0.25, k=0.15
+c(20:300)[230]
+#for e=0.3, k=0.15
+c(20:300)[124]
+#for e=0.35, k=0.15
+c(20:300)[75]
+
+##passive surveillance
+run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
+           treatment_effect = 0.35, k = 0.15, 
+           nr.percluster = 500:2000)
+#for e=0.25, k=0.15
+c(800:2000)[881]
+#for e=0.3, k=0.15
+c(800:2000)[168]
+#for e=0.35, k=0.15
+c(500:2000)[135]
+
 plot(x=20:200, y=cl.perarm.inf_k2_e2, type="l", col="black", ylim=c(0,20), lwd=lwd,
      xlab="Number of children per cluster", ylab="Number of clusters per arm",
      main="Effect size: 0.3", cex.axis=font.size, cex.lab=font.size, cex.main=font.size)

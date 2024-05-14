@@ -108,10 +108,11 @@ plot_sample_infections <- function(){
   
   plot(x=20:300, y=cl.perarm.inf_k1_e1, type="l", col="black", ylim=c(0,40), lwd=lwd, 
        xlab="Number of children per cluster", ylab="Number of clusters per arm",
-       main="Effect size: 0.25", cex.axis=font.size, cex.lab=font.size, cex.main=font.size)
+       main="Effect size: 0.25", cex.axis=font.size, cex.lab=font.size, cex.main=1.7)
   lines(x=20:300, y=cl.perarm.inf_k2_e1, col="red", lwd=lwd)
   lines(x=20:300, y=cl.perarm.inf_k3_e1, col="green", lwd=lwd)
   abline(h=15, col="red", lty=2, lwd=1.5)
+  abline(v=249, col="red", lty=2, lwd=1.5)
   
   cl.perarm.inf_k1_e2 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=inf_c_2yr, 
                                     treatment_effect = effectsizes[2], k = k_vec[1], 
@@ -125,11 +126,11 @@ plot_sample_infections <- function(){
   
   plot(x=20:300, y=cl.perarm.inf_k1_e2, type="l", col="black", ylim=c(0,40), lwd=lwd,
        xlab="Number of children per cluster", ylab="",
-       main="Effect size: 0.3", cex.axis=font.size, cex.lab=font.size, cex.main=font.size)
+       main="Effect size: 0.3", cex.axis=font.size, cex.lab=font.size, cex.main=1.7)
   lines(x=20:300, y=cl.perarm.inf_k2_e2, col="red", lwd=lwd)
   lines(x=20:300, y=cl.perarm.inf_k3_e2, col="green", lwd=lwd)
   abline(h=15, col="red", lty=2, lwd=1.5)
-  
+  abline(v=143, col="red", lty=2, lwd=1.5)
   
   cl.perarm.inf_k1_e3 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=inf_c_2yr, 
                                     treatment_effect = effectsizes[3], k = k_vec[1], 
@@ -143,19 +144,21 @@ plot_sample_infections <- function(){
   
   plot(x=20:300, y=cl.perarm.inf_k1_e3, type="l", col="black", ylim=c(0,40), lwd=lwd, 
        xlab="Number of children per cluster", ylab="",
-       main="Effect size: 0.35",  cex.axis=font.size, cex.lab=font.size, cex.main=font.size)
+       main="Effect size: 0.35",  cex.axis=font.size, cex.lab=font.size, cex.main=1.7)
   lines(x=20:300, y=cl.perarm.inf_k2_e3, col="red", lwd=lwd)
   lines(x=20:300, y=cl.perarm.inf_k3_e3, col="green", lwd=lwd)
   abline(h=15, col="red", lty=2, lwd=1.5)
+  abline(v=94, col="red", lty=2, lwd=1.5)
   
   legend("topright",
          title="k",
          legend=c("0.02", 
                   "0.15",
                   "0.25"), col=c("black", "red", "green"), lty=1,
-         lwd=2)
+         lwd=2,
+         cex=1.3)
   
-  mtext("Subject enrollment using infections as events", line=0, side=3, outer=TRUE, cex=1.2)
+  mtext("Subject enrollment using infections as events", line=0, side=3, outer=TRUE, cex=1.8)
   
   dev.off()
 }
@@ -167,24 +170,24 @@ plot_sample_cases <- function(){
   
   cl.perarm.case_k1_e1 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
                                      treatment_effect = effectsizes[1], k = k_vec[1], 
-                                     nr.percluster = 20:1500)
+                                     nr.percluster = 20:1750)
   cl.perarm.case_k2_e1 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
                                      treatment_effect = effectsizes[1], k = k_vec[2], 
-                                     nr.percluster = 20:1500)
+                                     nr.percluster = 20:1750)
   cl.perarm.case_k3_e1 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
                                      treatment_effect = effectsizes[1], k = k_vec[3], 
-                                     nr.percluster = 20:1500)
+                                     nr.percluster = 20:1750)
   
   layout(matrix(1:3, ncol=3, byrow=T))
   par(oma=c(0,0,2,0))
   
-  plot(x=20:1500, y=cl.perarm.case_k1_e1, type="l", col="black", lwd=lwd,
+  plot(x=20:1750, y=cl.perarm.case_k1_e1, type="l", col="black", lwd=lwd,
        xlab="Number of children per cluster", ylab="Number of clusters per arm", ylim=c(0,200), 
-       main="Effect size: 0.25", cex.axis=font.size, cex.lab=font.size, cex.main=font.size)
-  lines(x=20:1500, y=cl.perarm.case_k2_e1, col="red", lwd=lwd)
-  lines(x=20:1500, y=cl.perarm.case_k3_e1, col="green", lwd=lwd)
+       main="Effect size: 0.25", cex.axis=font.size, cex.lab=font.size, cex.main=1.7)
+  lines(x=20:1750, y=cl.perarm.case_k2_e1, col="red", lwd=lwd)
+  lines(x=20:1750, y=cl.perarm.case_k3_e1, col="green", lwd=lwd)
   abline(h=15, col="red", lty=2, lwd=1.5)
-  
+  abline(v=1680, col="red", lty=2, lwd=1.5)
   
   cl.perarm.case_k1_e2 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
                                      treatment_effect = effectsizes[2], k = k_vec[1], 
@@ -198,10 +201,11 @@ plot_sample_cases <- function(){
   
   plot(x=20:1500, y=cl.perarm.case_k1_e2, type="l", col="black", lwd=lwd,
        xlab="Number of children per cluster", ylab="", ylim=c(0,200), 
-       main="Effect size: 0.3", cex.axis=font.size, cex.lab=font.size, cex.main=font.size)
+       main="Effect size: 0.3", cex.axis=font.size, cex.lab=font.size, cex.main=1.7)
   lines(x=20:1500, y=cl.perarm.case_k2_e2, col="red", lwd=lwd)
   lines(x=20:1500, y=cl.perarm.case_k3_e2, col="green", lwd=lwd)
   abline(h=15, col="red", lty=2, lwd=1.5)
+  abline(v=967, col="red", lty=2, lwd=1.5)
   
   
   cl.perarm.case_k1_e3 <- run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
@@ -216,18 +220,20 @@ plot_sample_cases <- function(){
   
   plot(x=20:1500, y=cl.perarm.case_k1_e3, type="l", col="black", lwd=lwd,
        xlab="Number of children per cluster", ylab="", ylim=c(0,200), 
-       main="Effect size: 0.35", cex.axis=font.size, cex.lab=font.size, cex.main=font.size)
+       main="Effect size: 0.35", cex.axis=font.size, cex.lab=font.size, cex.main=1.7)
   lines(x=20:1500, y=cl.perarm.case_k2_e3, col="red", lwd=lwd)
   lines(x=20:1500, y=cl.perarm.case_k3_e3, col="green", lwd=lwd)
   abline(h=15, col="red", lty=2, lwd=1.5)
+  abline(v=634, col="red", lty=2, lwd=1.5)
   
   legend("topright",
          title="k",
          legend=c("0.02", 
                   "0.15",
                   "0.25"), col=c("black", "red", "green"), lty=1,
-         lwd=2)  
-  mtext("Subject enrollment using cases as events", line=0, side=3, outer=TRUE, cex=1.2)
+         lwd=2,
+         cex=1.3)  
+  mtext("Subject enrollment using cases as events", line=0, side=3, outer=TRUE, cex=1.8)
   
   dev.off()
   
