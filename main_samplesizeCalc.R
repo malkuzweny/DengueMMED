@@ -3,6 +3,7 @@ rm(list=ls())
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 source('functions.R')
+source('main_infections.R')
 
 # Parameters --------------------------------------------------------------
 
@@ -122,6 +123,17 @@ ggplot(data=prop.infection) +
   # scale_fill_gradient2(midpoint=800, low="blue", high="red", mid="white") +
   labs(x='Minimum age', y="Maximum age", fill="Cluster size")
 
+ggplot(data=prop.infection) +
+  geom_tile(aes(x=minAge, y=maxAge, fill=clusterSize)) +
+  scale_x_continuous(breaks = c(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44)) +
+  scale_y_continuous(breaks = c(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44)) +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(), #color = "gray", linetype = "dashed"),
+        panel.grid.minor = element_blank()) +
+  scale_fill_gradient(low="gold", high="red") +
+  # scale_fill_gradient2(midpoint=800, low="blue", high="red", mid="white") +
+  labs(x='Minimum age', y="Maximum age", fill="Cluster size")
+
 
 ggplot(data=prop.infection) +
   geom_tile(aes(x=minAge, y=maxAge, fill=no.households.percl)) +
@@ -132,7 +144,18 @@ ggplot(data=prop.infection) +
         panel.grid.minor = element_blank()) +
   scale_fill_gradient2(midpoint=mean(prop.infection$no.households.percl), low="blue", high="red", mid="white") +
   # scale_fill_gradient2(midpoint=800, low="blue", high="red", mid="white") +
-  labs(x='Minimum age', y="Maximum age", fill="No of houses \nscreened per cluster")
+  labs(x='Minimum age', y="Maximum age", fill="No. of houses \nscreened per cluster")
+
+ggplot(data=prop.infection) +
+  geom_tile(aes(x=minAge, y=maxAge, fill=no.households.percl)) +
+  scale_x_continuous(breaks = c(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44)) +
+  scale_y_continuous(breaks = c(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44)) +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(), #color = "gray", linetype = "dashed"),
+        panel.grid.minor = element_blank()) +
+  scale_fill_gradient(low="gold", high="red") +
+  # scale_fill_gradient2(midpoint=800, low="blue", high="red", mid="white") +
+  labs(x='Minimum age', y="Maximum age", fill="No. of houses \nscreened per cluster")
 
 ggplot(data=prop.infection) +
   geom_tile(aes(x=minAge, y=maxAge, fill=eligible.perhh)) +

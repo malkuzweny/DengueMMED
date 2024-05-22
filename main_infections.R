@@ -4,6 +4,7 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 library(data.table)
 library(RColorBrewer)
+library(ggplot2)
 
 source('functions.R')
 
