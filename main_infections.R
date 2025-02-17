@@ -262,32 +262,32 @@ lwd <- 4
 # * no of infections using minimum age ---------------------------------------
 
 # age groups: varying minimum age to age 60
-prop.infection <- data.frame(prop.infection=as.numeric(), minAge=as.numeric(), population=as.numeric())
-minAge <- 1
-maxAge <- 60
-
-while (minAge < 40){
-  ageRange <- minAge:maxAge
-  
-  # proportion of people experiencing infection
-  inf_c <- sum(AgeDist[ageRange]*
-                 rowSums(dengue_df.Gamp[length(years)-1,ageRange,c("I1","I2")]))/sum(AgeDist[ageRange])
-  inf_c_2yr <- 1-(1-inf_c)^2
-  
-  # proportion of people eligible for inclusion (i.e. in S3 or S2)
-  sus <- sum(AgeDist[ageRange]*
-               rowSums(dengue_df.Gamp[length(years)-1,ageRange,c("S3","S2")]))/sum(AgeDist[ageRange])
-  
-  # number of people in this age group (total population size 2.5m)
-  population <- 2500000 * sum(AgeDist[minAge:60])  
-  
-  output <- c(inf_c_2yr, sus, minAge, population)
-  output <- t(as.data.frame(output))
-  prop.infection <- rbind(prop.infection, output)
-  minAge <- minAge+1
-}
-names(prop.infection) <- c("prop.infection", "prop.sus", "minAge", "population")
-prop.infection$maxAge <- maxAge
-
-plot(prop.infection$minAge, prop.infection$prop.infection)
+# prop.infection <- data.frame(prop.infection=as.numeric(), minAge=as.numeric(), population=as.numeric())
+# minAge <- 1
+# maxAge <- 60
+# 
+# while (minAge < 40){
+#   ageRange <- minAge:maxAge
+#   
+#   # proportion of people experiencing infection
+#   inf_c <- sum(AgeDist[ageRange]*
+#                  rowSums(dengue_df.Gamp[length(years)-1,ageRange,c("I1","I2")]))/sum(AgeDist[ageRange])
+#   inf_c_2yr <- 1-(1-inf_c)^2
+#   
+#   # proportion of people eligible for inclusion (i.e. in S3 or S2)
+#   sus <- sum(AgeDist[ageRange]*
+#                rowSums(dengue_df.Gamp[length(years)-1,ageRange,c("S3","S2")]))/sum(AgeDist[ageRange])
+#   
+#   # number of people in this age group (total population size 2.5m)
+#   population <- 2500000 * sum(AgeDist[minAge:60])  
+#   
+#   output <- c(inf_c_2yr, sus, minAge, population)
+#   output <- t(as.data.frame(output))
+#   prop.infection <- rbind(prop.infection, output)
+#   minAge <- minAge+1
+# }
+# names(prop.infection) <- c("prop.infection", "prop.sus", "minAge", "population")
+# prop.infection$maxAge <- maxAge
+# 
+# plot(prop.infection$minAge, prop.infection$prop.infection)
 

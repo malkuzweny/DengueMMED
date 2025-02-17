@@ -36,8 +36,8 @@ for (ii in prop.infection$prop.infection) {
 
 prop.infection$cl.perarm.inf <- cl.perarm.inf
 prop.infection$sampleSize.inf <- prop.infection$cl.perarm.inf * 200
-prop.infection$prop.population <- prop.infection$sampleSize.inf / prop.infection$population * 2 # *2 bc two arms
-names(prop.infection) <- c("prop.infection", "minAge", "population", "maxAge", "clusters.perarm", "people.perarm", "prop.population")
+# prop.infection$prop.population <- prop.infection$sampleSize.inf / prop.infection$populationSize * 2 # *2 bc two arms
+# names(prop.infection) <- c("prop.infection", "prop.sus", "minAge", "populationSize", "maxAge", "clusters.perarm", "people.perarm", "prop.population")
 
 
 plot(x=prop.infection$minAge, y=prop.infection$clusters.perarm, type="l", col="black", 
@@ -91,6 +91,9 @@ prop.infection$no.households.percl <- prop.infection$clusterSize / prop.infectio
 # prop.infection$no.households.percl <- ifelse(prop.infection$no.households.percl>200, 200, prop.infection$no.households.percl)
 # names(prop.infection) <- c("prop.infection", "minAge", "population", "maxAge", "clusters.perarm", "people.perarm", "prop.population")
 
+
+# * plots -----------------------------------------------------------------
+
 ggplot(data=prop.infection) +
   geom_tile(aes(x=minAge, y=maxAge, fill=sampleSize.inf)) +
   scale_x_continuous(breaks = c(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44)) +
@@ -119,7 +122,8 @@ ggplot(data=prop.infection) +
   theme_bw() +
   theme(panel.grid.major = element_blank(), #color = "gray", linetype = "dashed"),
         panel.grid.minor = element_blank()) +
-  scale_fill_gradient2(midpoint=mean(prop.infection$clusterSize), low="blue", high="red", mid="white") +
+  scale_fill_gradient2(midpoint=mean(prop.infection$clusterSize), 
+                       low="blue", high="red", mid="white") +
   # scale_fill_gradient2(midpoint=800, low="blue", high="red", mid="white") +
   labs(x='Minimum age', y="Maximum age", fill="Cluster size")
 
@@ -261,3 +265,38 @@ run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015,
 run.sscalc(z_a2=1.96, z_b=0.84, pi_0=0.015, 
            treatment_effect = effectsizes[2], k = k_vec[3], 
            nr.percluster = 1000:3000) # 1994 per arm (106% more)
+
+
+# * age heatmaps baseR ----------------------------------------------------
+
+library(reshape2)
+
+# cluster size
+mat <- acast(prop.infection, maxAge ~ minAge, value.var="clusterSize")
+
+# Define color gradient (e.g., shades of blue)
+colors <- colorRampPalette(c("lightblue", "blue", "darkblue"))(100)
+
+# Plot using image()
+image(x=unique(prop.infection$minAge), y=unique(prop.infection$maxAge), z=t(mat), 
+      col=colors, xlab="Minimum age", ylab="Maximum age")
+
+# Add legend
+legend("topright", legend=pretty(range(prop.infection$clusterSize)), 
+       fill=colors[seq(1, 100, length.out=8)], 
+       title="Cluster size")
+
+# no of households screened
+mat <- acast(prop.infection, maxAge ~ minAge, value.var="no.households.percl")
+
+# Define color gradient (e.g., shades of blue)
+colors <- colorRampPalette(c("lightblue", "blue", "darkblue"))(100)
+
+# Plot using image()
+image(x=unique(prop.infection$minAge), y=unique(prop.infection$maxAge), z=t(mat), 
+      col=colors, xlab="Minimum age", ylab="Maximum age")
+
+# Add legend
+legend("topright", legend=pretty(range(prop.infection$clusterSize)), 
+       fill=colors[seq(1, 100, length.out=8)], 
+       title="No of households screened per cluster")
