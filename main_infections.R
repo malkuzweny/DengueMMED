@@ -212,6 +212,7 @@ lwd <- 4
 
 # par(mar = c(bottom, left, top, right)) , alue for mar is c(5.1, 4.1, 4.1, 2.1)  
 
+
 {
   cols <- brewer.pal(4, "Set1")
   
@@ -229,6 +230,36 @@ lwd <- 4
          col=c(cols[1], cols[2], cols[3]), lty=1, cex=font.size, bg="white", bty="n", lwd=lwd)
   
 }
+
+# Adjusted 
+png("Figure_1_update.png", width = 3000, height = 2000, res = 300  )  # Increase width to 1200 pixels
+
+{
+  # Your plotting code here:
+     #cols <- colorRampPalette(c("lightcoral", "darkred"))(3)
+     cols <- colorRampPalette(c("mistyrose", "darkred"))(3)
+  
+  plot(x = 1:max_age, y = (plotDF[100, , "I1"]*100), type = "l", col = cols[1], lwd = lwd,
+       ylim = c(0, 0.06*100), xlab = "Age", ylab = "% of population infected",
+       cex.axis = font.size, cex.lab = font.size)
+  
+  lines(x = 1:max_age, y = plotDF[100, , "I2"]*100, col = cols[2], lwd = lwd)
+  lines(x = 1:max_age, y = plotDF[100, , "I3"]*100, col = cols[3], lwd = lwd)
+  
+  abline(v = 4)
+  abline(v = 16)
+  
+  rect(xleft = 4, xright = 16, ybottom = par("usr")[3], ytop = par("usr")[4],
+       border = NA, col = adjustcolor("black", alpha = 0.3))
+  
+  legend("topright", 
+         legend = c("First infection", "Second infection", "Third infection"),
+         col = cols, lty = 1, lwd = lwd, cex = font.size, bg = "white", bty = "o")
+}
+dev.off()
+
+
+
 
 
 
